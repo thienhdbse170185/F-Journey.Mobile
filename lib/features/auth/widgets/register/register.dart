@@ -3,18 +3,18 @@ import 'package:f_journey/core/utils/keyboard_util.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen(
+class RegisterWidget extends StatefulWidget {
+  const RegisterWidget(
       {super.key, required this.textTheme, required this.onToggle});
 
   final TextTheme textTheme;
   final VoidCallback onToggle;
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterWidget> createState() => _RegisterWidgetState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterWidgetState extends State<RegisterWidget> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =

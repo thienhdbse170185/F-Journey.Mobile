@@ -1,4 +1,5 @@
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
+import 'package:f_journey/features/auth/widgets/forgot-pw/forgot-pw.dart';
 import 'package:f_journey/features/auth/widgets/index.dart';
 import 'package:f_journey/features/trip/widgets/home.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'package:go_router/go_router.dart';
 class RouteName {
   static const String home = '/';
   static const String auth = '/auth';
+  static const String forgotPw = '/forgot-pw';
 
-  static const publicRoutes = [auth];
+  static const publicRoutes = [auth, forgotPw];
 }
 
 final router = GoRouter(
@@ -31,6 +33,14 @@ final router = GoRouter(
           path: RouteName.auth,
           builder: (context, state) {
             final TextTheme textTheme = Theme.of(context).textTheme;
-            return AuthScreen(textTheme: textTheme);
+            return AuthWidget(textTheme: textTheme);
           }),
+      GoRoute(
+          path: RouteName.forgotPw,
+          builder: (context, state) {
+            final TextTheme textTheme = Theme.of(context).textTheme;
+            return ForgotPwWidget(
+              textTheme: textTheme,
+            );
+          })
     ]);

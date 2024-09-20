@@ -1,25 +1,27 @@
 import 'package:f_journey/core/common/widgets/dialog/loading_dialog.dart';
 import 'package:f_journey/core/common/widgets/dialog/success_dialog.dart';
 import 'package:f_journey/core/common/widgets/text_field.dart';
+import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/keyboard_util.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/core/utils/snackbar_util.dart';
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen(
+class LoginWidget extends StatefulWidget {
+  const LoginWidget(
       {super.key, required this.textTheme, required this.onToggle});
 
   final TextTheme textTheme;
   final VoidCallback onToggle;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginWidget> createState() => _LoginWidgetState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginWidgetState extends State<LoginWidget> {
   bool isRemembered = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -141,9 +143,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push(RouteName.forgotPw);
+                      },
                       child: Text(
-                        'Forgot Password?',
+                        'Forgot password?',
                         style: widget.textTheme.bodyMedium?.copyWith(
                           color: Colors.blue,
                         ),

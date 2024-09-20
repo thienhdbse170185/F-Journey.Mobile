@@ -2,15 +2,15 @@ import 'package:f_journey/features/auth/widgets/login/login.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key, required this.textTheme});
+class AuthWidget extends StatefulWidget {
+  const AuthWidget({super.key, required this.textTheme});
   final TextTheme textTheme;
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<AuthWidget> createState() => _AuthWidgetState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthWidgetState extends State<AuthWidget> {
   final PageController _pageController = PageController();
   bool showLogin = true;
 
@@ -48,11 +48,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  LoginScreen(
+                  LoginWidget(
                     textTheme: widget.textTheme,
                     onToggle: toggleView,
                   ),
-                  RegisterScreen(
+                  RegisterWidget(
                     textTheme: widget.textTheme,
                     onToggle: toggleView,
                   ),
