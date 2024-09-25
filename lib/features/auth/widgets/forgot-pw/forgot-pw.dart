@@ -11,9 +11,10 @@ class ForgotPwWidget extends StatefulWidget {
 class _ForgotPwWidgetState extends State<ForgotPwWidget> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: Text('ForgotPwWidget', style: widget.textTheme.bodyLarge),
-    ));
+    return const Scaffold(
+      body: Center(
+        child: Text('Forgot password?'),
+      ),
+    );
   }
 }
