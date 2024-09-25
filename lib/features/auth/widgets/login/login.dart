@@ -39,8 +39,8 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   void _validateForm() {
-    // Nếu form hợp lệ thì cờ isFormValid sẽ true
     setState(() {
+      // Kiểm tra và cập nhật trạng thái hợp lệ của form
       isFormValid = _formKey.currentState?.validate() ?? false;
     });
   }
@@ -100,7 +100,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               ],
             ),
             child: Form(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.disabled,
               key: _formKey,
               child: Column(
                 key: const ValueKey<bool>(true),
@@ -127,9 +127,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                   CustomTextField(
                       controller: emailController,
                       labelText: 'Email',
-                      isPassword: false,
-                      validator: ((value) => RegUtil.validateEmail(value))),
-                  const SizedBox(height: 16),
+                      isPassword: false),
+                  const SizedBox(height: 24),
                   CustomTextField(
                       controller: passwordController,
                       labelText: 'Password',
@@ -143,8 +142,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                             setState(() {
                               showPassword = !showPassword;
                             });
-                          }),
-                      validator: ((value) => RegUtil.validatePassword(value))),
+                          })),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,13 +179,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   const SizedBox(height: 8),
                   ElevatedButton(
-                    // onPressed: isFormValid ? () => _submit() : null,
-                    onPressed: () => _submit(),
+                    onPressed: _submit,
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: isFormValid
-                          ? Colors.purple.shade400
-                          : Colors.purple.shade100,
+                      backgroundColor: Colors.purple.shade400,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),

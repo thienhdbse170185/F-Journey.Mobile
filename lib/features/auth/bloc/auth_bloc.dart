@@ -1,3 +1,4 @@
+import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginEmailPasswordStarted event, Emitter<AuthState> emit) async {
     emit(AuthInProgress());
     try {
+      if (RegUtil.validateEmail(event.email) != null &&
+          RegUtil.validatePassword(event.password) != null) {
+        emit(LoginError(message: 'Please enter valid email/password'));
+        return;
+      }
       UserDto? user = await authRepository.getUserByEmail(event.email);
       if (user == null) {
         emit(LoginError(message: 'User not found'));

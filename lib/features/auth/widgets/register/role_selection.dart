@@ -112,7 +112,7 @@ class _RoleSelectionWidgetState extends State<RoleSelectionWidget> {
                 _buildRoleButton('Driver', isDriver, () => _selectRole(true)),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
             // Additional fields for Passenger
             if (isPassenger) ...[
@@ -123,15 +123,15 @@ class _RoleSelectionWidgetState extends State<RoleSelectionWidget> {
                   helperText: 'Required for passengers',
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               // Upload student card image
               TextButton(
                 onPressed: () {
                   // Implement image picker for student card image
                 },
-                child: const Text('Upload Student Card Image'),
+                child: const Text('Upload Student Card Image (required)'),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               // Upload avatar image or use default
               TextButton(
                 onPressed: () {
@@ -147,23 +147,24 @@ class _RoleSelectionWidgetState extends State<RoleSelectionWidget> {
                 controller: licenseNumberController,
                 decoration: const InputDecoration(
                   labelText: 'License Number',
+                  helperText: 'Required for drivers',
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               // Upload driver's license image
               TextButton(
                 onPressed: () {
                   // Implement image picker for license image
                 },
-                child: const Text('Upload Driver’s License Image'),
+                child: const Text('Upload Driver’s License Image (required)'),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               // Upload vehicle image
               TextButton(
                 onPressed: () {
                   // Implement image picker for vehicle image
                 },
-                child: const Text('Upload Vehicle Image'),
+                child: const Text('Upload Vehicle Image (required)'),
               ),
             ],
 
