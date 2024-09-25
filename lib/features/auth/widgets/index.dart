@@ -1,5 +1,6 @@
 import 'package:f_journey/features/auth/widgets/login/login.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
+import 'package:f_journey/features/auth/widgets/register/role_selection.dart';
 import 'package:flutter/material.dart';
 
 class AuthWidget extends StatefulWidget {
@@ -52,10 +53,15 @@ class _AuthWidgetState extends State<AuthWidget> {
                     textTheme: widget.textTheme,
                     onToggle: toggleView,
                   ),
-                  RegisterWidget(
+                  // RegisterWidget(
+                  //   textTheme: widget.textTheme,
+                  //   onToggle: toggleView,
+                  // ),
+                  RoleSelectionWidget(
                     textTheme: widget.textTheme,
+                    onSubmit: () {},
                     onToggle: toggleView,
-                  ),
+                  )
                 ],
               ),
             ),
