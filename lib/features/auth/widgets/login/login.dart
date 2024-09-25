@@ -3,7 +3,6 @@ import 'package:f_journey/core/common/widgets/dialog/success_dialog.dart';
 import 'package:f_journey/core/common/widgets/text_field.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/keyboard_util.dart';
-import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/core/utils/snackbar_util.dart';
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
