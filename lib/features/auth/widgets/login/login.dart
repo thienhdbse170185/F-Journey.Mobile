@@ -195,69 +195,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ),
                   const SizedBox(height: 24),
                   Row(
-                    children: [
-                      const Expanded(
-                        child: Divider(
-                          color: Colors.black12,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          'Or login with',
-                          style: widget.textTheme.bodyMedium?.copyWith(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        child: Divider(
-                          color: Colors.black12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Image.asset('assets/images/google.png',
-                            height: 24, width: 24),
-                        onPressed: () {},
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          side: const BorderSide(
-                            color: Colors.black12,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      IconButton(
-                        icon: Image.asset('assets/images/facebook.png',
-                            height: 24, width: 24),
-                        onPressed: () {},
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 20),
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                          ),
-                          side: const BorderSide(
-                            color: Colors.black12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
