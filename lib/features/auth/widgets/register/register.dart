@@ -4,11 +4,10 @@ import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:flutter/material.dart';
 
 class RegisterWidget extends StatefulWidget {
-  const RegisterWidget(
-      {super.key, required this.textTheme, required this.onToggle});
+  const RegisterWidget({super.key, required this.textTheme, this.onToggle});
 
   final TextTheme textTheme;
-  final VoidCallback onToggle;
+  final VoidCallback? onToggle;
 
   @override
   State<RegisterWidget> createState() => _RegisterWidgetState();
@@ -129,7 +128,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.purple.shade400,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -156,7 +155,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                     child: Text(
                       'Log In',
                       style: widget.textTheme.bodyMedium?.copyWith(
-                        color: Colors.blue,
+                        color: Colors.purple.shade300,
                       ),
                     ),
                   ),
