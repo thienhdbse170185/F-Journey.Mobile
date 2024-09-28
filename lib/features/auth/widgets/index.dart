@@ -1,7 +1,6 @@
 import 'package:f_journey/features/auth/widgets/login/login.dart';
 import 'package:f_journey/features/auth/widgets/register/driver_license.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget({super.key, required this.textTheme, this.view});
@@ -63,7 +62,7 @@ class _AuthWidgetState extends State<AuthWidget> {
             textTheme: widget.textTheme,
             onSubmit: () {},
             onToggle: toggleView,
-          )
+          ),
         ],
       ),
     );
