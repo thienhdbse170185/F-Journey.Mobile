@@ -1,5 +1,7 @@
 import 'package:f_journey/core/router.dart';
+import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class GetStartedWidget extends StatefulWidget {
@@ -60,7 +62,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                 // Button for Google Login as Passenger (styled like official Google button)
                 OutlinedButton(
                   onPressed: () {
-                    // Handle Google Login as Passenger
+                    context.read<AuthBloc>().add(LoginGoogleStarted());
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
