@@ -2,11 +2,14 @@ import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/theme/text_theme.dart';
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
+import 'package:f_journey/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
