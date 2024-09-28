@@ -1,11 +1,11 @@
-import 'package:f_journey/features/auth/widgets/get-started/get-started.dart';
 import 'package:f_journey/features/auth/widgets/login/login.dart';
-import 'package:f_journey/features/auth/widgets/register/role_selection.dart';
+import 'package:f_journey/features/auth/widgets/register/driver_license.dart';
 import 'package:flutter/material.dart';
 
 class AuthWidget extends StatefulWidget {
-  const AuthWidget({super.key, required this.textTheme});
+  const AuthWidget({super.key, required this.textTheme, this.view});
   final TextTheme textTheme;
+  final String? view;
 
   @override
   State<AuthWidget> createState() => _AuthWidgetState();
@@ -14,6 +14,20 @@ class AuthWidget extends StatefulWidget {
 class _AuthWidgetState extends State<AuthWidget> {
   final PageController _pageController = PageController();
   bool showLogin = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.view == 'driver-license') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          showLogin = false;
+          _pageController.jumpToPage(1);
+        });
+      });
+    }
+  }
 
   void toggleView() {
     setState(() {
@@ -44,11 +58,11 @@ class _AuthWidgetState extends State<AuthWidget> {
             textTheme: widget.textTheme,
             onToggle: toggleView,
           ),
-          RoleSelectionWidget(
+          DriverLicenseRegisterWidget(
             textTheme: widget.textTheme,
             onSubmit: () {},
             onToggle: toggleView,
-          )
+          ),
         ],
       ),
     );

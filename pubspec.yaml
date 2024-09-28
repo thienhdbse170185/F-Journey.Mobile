@@ -30,6 +30,9 @@ dependencies:
   fpdart: ^1.1.0
   lottie: ^3.1.2
   intl: ^0.19.0
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:

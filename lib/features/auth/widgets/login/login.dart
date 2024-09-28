@@ -85,7 +85,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         },
         child: SingleChildScrollView(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.7),
@@ -105,6 +105,17 @@ class _LoginWidgetState extends State<LoginWidget> {
                 key: const ValueKey<bool>(true),
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Nút back để quay lại màn hình Get Started
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Quay lại màn hình trước đó
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                      color: Colors.black54,
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 24.0),
                     child: Image.asset(
@@ -122,7 +133,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 48),
                   CustomTextField(
                       controller: emailController,
                       labelText: 'Email',
@@ -176,7 +187,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _submit,
                     style: ElevatedButton.styleFrom(

@@ -1,5 +1,7 @@
 import 'package:f_journey/core/router.dart';
+import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class GetStartedWidget extends StatefulWidget {
@@ -19,7 +21,9 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
+          // padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
+          padding: const EdgeInsets.only(
+              top: 8.0, right: 16.0, bottom: 16.0, left: 16.0),
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.7),
@@ -58,7 +62,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                 // Button for Google Login as Passenger (styled like official Google button)
                 OutlinedButton(
                   onPressed: () {
-                    // Handle Google Login as Passenger
+                    context.read<AuthBloc>().add(LoginGoogleStarted());
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -133,7 +137,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32.0),
+                const SizedBox(height: 24.0),
                 // Footer section with "Want to become a driver?" in a row
                 Center(
                   child: Row(
@@ -144,11 +148,15 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                         style: widget.textTheme.bodyMedium
                             ?.copyWith(color: Colors.grey.shade600),
                       ),
-                      const SizedBox(width: 8.0), // Space between texts
-                      GestureDetector(
-                        onTap: () {
-                          // Handle driver registration navigation
+                      const SizedBox(width: 12.0), // Space between texts
+                      TextButton(
+                        onPressed: () {
+                          context.push(RouteName.auth, extra: 'driver-license');
                         },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets
+                              .zero, // Loại bỏ padding mặc định của TextButton
+                        ),
                         child: Text(
                           'Signup here',
                           style: widget.textTheme.bodyMedium
