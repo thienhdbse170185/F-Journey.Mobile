@@ -3,6 +3,7 @@ import 'package:f_journey/features/auth/widgets/forgot-pw/forgot-pw.dart';
 import 'package:f_journey/features/auth/widgets/get-started/get-started.dart';
 import 'package:f_journey/features/auth/widgets/index.dart';
 import 'package:f_journey/features/auth/widgets/layout.dart';
+import 'package:f_journey/features/auth/widgets/register/passenger_info.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
 import 'package:f_journey/features/trip/widgets/home.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class RouteName {
   static const String auth = '/auth';
   static const String forgotPw = '/forgot-pw';
   static const String register = '/register';
+  static const String passengerInfo = '/passenger-info';
 
   static const publicRoutes = [auth, forgotPw, getStarted, register];
 }
@@ -24,7 +26,8 @@ final router = GoRouter(
       if (RouteName.publicRoutes.contains(state.fullPath)) {
         return null;
       }
-      if (context.read<AuthBloc>().state is LoginSuccess) {
+      if (context.read<AuthBloc>().state is LoginSuccess ||
+          context.read<AuthBloc>().state is LoginGoogleSuccess) {
         return null;
       }
       return RouteName.getStarted;
@@ -72,6 +75,12 @@ final router = GoRouter(
                 builder: (context, state) {
                   final TextTheme textTheme = Theme.of(context).textTheme;
                   return RegisterWidget(textTheme: textTheme);
+                }),
+            GoRoute(
+                path: RouteName.passengerInfo,
+                builder: (context, state) {
+                  final TextTheme textTheme = Theme.of(context).textTheme;
+                  return PassengerInfoWidget(textTheme: textTheme);
                 })
           ])
     ]);
