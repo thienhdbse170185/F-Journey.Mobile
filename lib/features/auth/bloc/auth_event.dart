@@ -16,6 +16,11 @@ class LoginEmailPasswordStarted extends AuthEvent {
 
 class LoginGoogleStarted extends AuthEvent {}
 
+class CheckNewUserStarted extends AuthEvent {
+  final UserCredential userCredential;
+  CheckNewUserStarted({required this.userCredential});
+}
+
 class RegisterStarted extends AuthEvent {
   final String email;
   final String password;

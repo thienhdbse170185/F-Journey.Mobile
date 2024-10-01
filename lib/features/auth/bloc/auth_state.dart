@@ -34,3 +34,12 @@ class LoginGoogleError extends AuthState {
 }
 
 class LoginGoogleSuccess extends AuthState {}
+
+class CheckNewUserError extends AuthState {
+  final String message;
+  CheckNewUserError({required this.message});
+}
+
+class UserAlreadyExists extends AuthState {}
+
+class UserDoesNotExist extends AuthState {}

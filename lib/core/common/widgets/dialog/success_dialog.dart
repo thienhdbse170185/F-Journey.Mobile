@@ -31,6 +31,6 @@ class SuccessDialog {
   }
 
   static void hide(BuildContext context) {
-    Navigator.of(context).pop();
+    Navigator.of(context, rootNavigator: true).pop('dialog');
   }
 }

@@ -69,6 +69,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+      if (kDebugMode) {
+        print('credential: $credential');
+      }
 
       // Sign in to Firebase with the Google credential
       return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -100,6 +103,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(LoginGoogleError(message: 'Error while login with Google'));
       if (kDebugMode) {
         print('Error while login with Google: $e');
+      }
+    }
+  }
+
+  Future<void> _onCheckNewUserStarted(
+    CheckNewUserStarted event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthInProgress());
+    try {
+      UserDto? user = await authRepository
+          .getUserByEmail(event.userCredential.user!.email!);
+      if (user == null) {
+        emit(UserDoesNotExist());
+      } else {
+        emit(UserAlreadyExists());
+      }
+    } catch (e) {
+      emit(CheckNewUserError(message: 'Error while checking new user'));
+      if (kDebugMode) {
+        print('Error while checking new user: $e');
       }
     }
   }
