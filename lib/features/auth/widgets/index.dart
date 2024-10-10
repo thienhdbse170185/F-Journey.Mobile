@@ -1,5 +1,5 @@
 import 'package:f_journey/features/auth/widgets/login/login.dart';
-import 'package:f_journey/features/auth/widgets/register/driver_license.dart';
+import 'package:f_journey/features/auth/widgets/register/driver.dart';
 import 'package:flutter/material.dart';
 
 class AuthWidget extends StatefulWidget {

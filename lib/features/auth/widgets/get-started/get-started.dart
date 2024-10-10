@@ -28,7 +28,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
           SuccessDialog.show(context);
           await Future.delayed(const Duration(milliseconds: 2900));
           SuccessDialog.hide(context);
-          context.go(RouteName.passengerInfo);
+          context.go(RouteName.passengerRegister);
         } else if (state is LoginGoogleError) {
           // LoadingDialog.hide(context);
           SnackbarUtil.openFailureSnackbar(context, state.message);
