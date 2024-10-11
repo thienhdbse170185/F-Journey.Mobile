@@ -28,7 +28,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
           SuccessDialog.show(context);
           await Future.delayed(const Duration(milliseconds: 2900));
           SuccessDialog.hide(context);
-          context.go(RouteName.passengerRegister);
+          context.go(RouteName.checking);
         } else if (state is LoginGoogleError) {
           // LoadingDialog.hide(context);
           SnackbarUtil.openFailureSnackbar(context, state.message);
@@ -65,13 +65,14 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                     margin: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
                       'F-Journey',
-                      style: widget.textTheme.headlineLarge,
+                      style: widget.textTheme.headlineMedium,
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(bottom: 28.0),
+                    width: 250,
                     child: Text(
-                      'Take a journey with your friend!',
+                      'Mang lại những trải nghiệm tuyệt vời cho mọi chuyến đi của bạn',
                       style: widget.textTheme.bodyMedium
                           ?.copyWith(color: Colors.grey.shade600),
                     ),
@@ -95,7 +96,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                         ),
                         const SizedBox(width: 12.0),
                         Text(
-                          'Login with Google as Passenger',
+                          'Đăng nhập trở thành Ôm',
                           style: widget.textTheme.bodyMedium
                               ?.copyWith(color: Colors.black),
                         ),
@@ -115,7 +116,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          'or',
+                          'hoặc',
                           style: TextStyle(color: Colors.black26),
                         ),
                       ),
@@ -149,7 +150,7 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                         ),
                         const SizedBox(width: 12.0),
                         Text(
-                          'Login as Driver',
+                          'Đăng nhập trở thành Xế',
                           style: widget.textTheme.bodyMedium
                               ?.copyWith(color: Colors.white),
                         ),
@@ -163,22 +164,21 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Want to become a driver?',
+                          'Bạn muốn trở thành Xế?',
                           style: widget.textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey.shade600),
                         ),
                         const SizedBox(width: 12.0), // Space between texts
                         TextButton(
                           onPressed: () {
-                            context.push(RouteName.auth,
-                                extra: 'driver-license');
+                            context.push(RouteName.welcomeDriver);
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets
                                 .zero, // Loại bỏ padding mặc định của TextButton
                           ),
                           child: Text(
-                            'Signup here',
+                            'Đăng kí tại đây',
                             style: widget.textTheme.bodyMedium
                                 ?.copyWith(color: Colors.purple.shade300),
                           ),
