@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:f_journey/core/router.dart';
 import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class PassengerRegistrationWidget extends StatefulWidget {
@@ -18,6 +21,9 @@ class _PassengerRegistrationWidgetState
   late DateTime _selectedDOB;
   TextEditingController _expiryDateController = TextEditingController();
   TextEditingController _dobController = TextEditingController();
+  File? _studentCardImage;
+  File? _avatarImage;
+  final ImagePicker _picker = ImagePicker();
 
   _selectExpiryDate(BuildContext context) async {
     await showDatePicker(
@@ -59,6 +65,19 @@ class _PassengerRegistrationWidgetState
     });
   }
 
+  Future<void> _pickImage(bool isStudentCard) async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        if (isStudentCard) {
+          _studentCardImage = File(pickedFile.path);
+        } else {
+          _avatarImage = File(pickedFile.path);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +103,7 @@ class _PassengerRegistrationWidgetState
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Column(
               children: [
+                // Thẻ sinh viên
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Row(
@@ -108,30 +128,39 @@ class _PassengerRegistrationWidgetState
                               borderType: BorderType.RRect,
                               radius: const Radius.circular(12),
                               strokeWidth: 1,
-                              child: SizedBox(
-                                width: 120,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.add),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Tải ảnh lên',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .outline),
-                                    ),
-                                  ],
-                                ),
+                              child: InkWell(
+                                onTap: () => _pickImage(true),
+                                child: SizedBox(
+                                    width: 120,
+                                    child: _studentCardImage != null
+                                        ? Image.file(
+                                            _studentCardImage!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Icon(Icons.add),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Tải ảnh lên',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .outline),
+                                              ),
+                                            ],
+                                          )),
                               )))
                     ],
                   ),
                 ),
                 const SizedBox(height: 32),
+                // Ảnh đại diện
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Row(
@@ -156,25 +185,36 @@ class _PassengerRegistrationWidgetState
                               borderType: BorderType.RRect,
                               radius: const Radius.circular(12),
                               strokeWidth: 1,
-                              child: SizedBox(
-                                width: 120,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.add),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Tải ảnh lên',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .outline),
-                                    ),
-                                  ],
-                                ),
+                              child: InkWell(
+                                onTap: () => _pickImage(false),
+                                child: SizedBox(
+                                    width: 120,
+                                    child: _avatarImage != null
+                                        ? Image.file(
+                                            _avatarImage!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : SizedBox(
+                                            width: 120,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(Icons.add),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  'Tải ảnh lên',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .outline),
+                                                ),
+                                              ],
+                                            ))),
                               )))
                     ],
                   ),
@@ -251,9 +291,12 @@ class _PassengerRegistrationWidgetState
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           width: MediaQuery.of(context).size.width,
-          child: const FilledButton(
-            onPressed: null,
-            child: Text('Mình đã sẵn sàng!'),
+          child: FilledButton(
+            onPressed: () {
+              // context.go(RouteName.registerResult);
+              context.push(RouteName.registerResult); //ONLY FOR DEV
+            },
+            child: const Text('Mình đã sẵn sàng!'),
           ),
         ));
   }

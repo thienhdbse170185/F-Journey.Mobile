@@ -8,7 +8,8 @@ class TextFieldRequired extends StatefulWidget {
       this.suffixIcon,
       this.onTap,
       this.isDisabled,
-      this.controller});
+      this.controller,
+      bool? obscureText});
 
   final String label;
   final String hintText;
