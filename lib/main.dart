@@ -1,3 +1,4 @@
+import 'package:f_journey/core/common/cubits/theme_cubit.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/theme/theme.dart';
 import 'package:f_journey/core/theme/util.dart';
@@ -14,23 +15,33 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => AuthRepository()),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider(create: (context) => AuthRepository()),
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => ThemeCubit(), // Add ThemeCubit
+          ),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-                create: (context) =>
-                    AuthBloc(authRepository: context.read<AuthRepository>()))
-          ],
-          child: const AppContent(),
-        ));
+        child: const AppContent(),
+      ),
+    );
   }
 }
 
@@ -39,27 +50,16 @@ class AppContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = View.of(context).platformDispatcher.platformBrightness;
-
-    // Retrieves the default theme for the platform
-    //TextTheme textTheme = Theme.of(context).textTheme;
-
-    // Use with Google Fonts package to use downloadable fonts
     TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    // return MaterialApp.router(
-    //   theme: ThemeData(
-    //     colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
-    //     disabledColor: Colors.white70,
-    //     // textTheme: customTextTheme,
-    //     useMaterial3: true,
-    //   ),
-    //   routerConfig: router,
-    // );
-    return MaterialApp.router(
-      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      routerConfig: router,
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, themeMode) {
+        return MaterialApp.router(
+          theme: themeMode == ThemeMode.light ? theme.light() : theme.dark(),
+          routerConfig: router,
+        );
+      },
     );
   }
 }

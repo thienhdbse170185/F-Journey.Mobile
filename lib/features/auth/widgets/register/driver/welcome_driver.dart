@@ -1,5 +1,7 @@
+import 'package:f_journey/core/common/cubits/theme_cubit.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class WelcomeDriverWidget extends StatefulWidget {
@@ -19,6 +21,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
   late Animation<double> _buttonOpacity;
 
   bool _isAgreeTerms = false;
+  bool _isDarkMode = false; // State variable for dark mode
 
   @override
   void initState() {
@@ -69,6 +72,57 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
     super.dispose();
   }
 
+  void _showSettingsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Dark Mode',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Switch(
+                    value: _isDarkMode,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isDarkMode = value;
+                      });
+                      context
+                          .read<ThemeCubit>()
+                          .toggleTheme(); // Update theme using Cubit
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .secondary, // Use secondary color
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the bottom sheet
+                  },
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +137,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: () {},
+            onPressed: _showSettingsBottomSheet, // Show the bottom sheet
           ),
         ],
       ),
@@ -94,7 +148,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image với hiệu ứng fade-in
+            // Image with fade-in effect
             FadeTransition(
               opacity: _imageOpacity,
               child: Image.asset(
@@ -103,7 +157,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
               ),
             ),
             const SizedBox(height: 32),
-            // Text Hi với hiệu ứng fade-in
+            // Welcome text with fade-in effect
             FadeTransition(
               opacity: _textOpacity,
               child: Text(
@@ -112,7 +166,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
               ),
             ),
             const SizedBox(height: 8),
-            // Mô tả với hiệu ứng fade-in
+            // Description with fade-in effect
             FadeTransition(
               opacity: _descriptionOpacity,
               child: Text(
@@ -124,7 +178,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
               ),
             ),
             const SizedBox(height: 32),
-            // Lưu ý hồ sơ
+            // Note section
             FadeTransition(
               opacity: _noteOpacity,
               child: Column(
@@ -148,7 +202,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 16),
-                  // Checkbox đồng ý với điều khoản
+                  // Terms agreement checkbox
                   Row(
                     children: [
                       Checkbox(
@@ -171,13 +225,13 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
               ),
             ),
             const SizedBox(height: 32),
-            // Nút Okay với hiệu ứng fade-in
+            // Okay button with fade-in effect
             FadeTransition(
               opacity: _buttonOpacity,
               child: FilledButton(
                 onPressed: _isAgreeTerms
                     ? () {
-                        // Chuyển hướng khi đồng ý điều khoản
+                        // Navigate when terms are agreed
                         context.push(RouteName.driverRegister);
                       }
                     : null,
