@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,9 @@ class _PassengerRegistrationWidgetState
           actions: [
             IconButton(
               icon: const Icon(Icons.more_vert),
-              onPressed: () {},
+              onPressed: () {
+                showSettingsBottomSheet(context);
+              },
             ),
           ],
         ),

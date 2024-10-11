@@ -1,3 +1,4 @@
+import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +24,9 @@ class _RegisterResultWidgetState extends State<RegisterResultWidget> {
           actions: [
             IconButton(
               icon: const Icon(Icons.more_vert),
-              onPressed: () {},
+              onPressed: () {
+                showSettingsBottomSheet(context);
+              },
             ),
           ],
         ),

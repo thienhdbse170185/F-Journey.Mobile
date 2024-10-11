@@ -65,7 +65,10 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
                     margin: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
                       'F-Journey',
-                      style: Theme.of(context).textTheme.headlineMedium,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(color: Colors.black),
                     ),
                   ),
                   Container(

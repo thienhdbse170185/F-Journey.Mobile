@@ -1,4 +1,5 @@
 import 'package:f_journey/core/common/cubits/theme_cubit.dart';
+import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,57 +73,6 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
     super.dispose();
   }
 
-  void _showSettingsBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Dark Mode',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  Switch(
-                    value: _isDarkMode,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isDarkMode = value;
-                      });
-                      context
-                          .read<ThemeCubit>()
-                          .toggleTheme(); // Update theme using Cubit
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context)
-                        .colorScheme
-                        .secondary, // Use secondary color
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the bottom sheet
-                  },
-                  child: const Text('Close'),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +87,9 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: _showSettingsBottomSheet, // Show the bottom sheet
+            onPressed: () {
+              showSettingsBottomSheet(context);
+            }, // Show the bottom sheet
           ),
         ],
       ),
