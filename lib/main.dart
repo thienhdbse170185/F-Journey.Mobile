@@ -53,10 +53,10 @@ class AppContent extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return BlocBuilder<ThemeCubit, ThemeMode>(
+    return BlocBuilder<ThemeCubit, bool>(
       builder: (context, themeMode) {
         return MaterialApp.router(
-          theme: themeMode == ThemeMode.light ? theme.light() : theme.dark(),
+          theme: themeMode == true ? theme.dark() : theme.light(),
           routerConfig: router,
         );
       },
