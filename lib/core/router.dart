@@ -1,5 +1,7 @@
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
 import 'package:f_journey/features/auth/widgets/forgot-pw/forgot-pw.dart';
+import 'package:f_journey/features/auth/widgets/forgot-pw/update-pw.dart';
+import 'package:f_journey/features/auth/widgets/forgot-pw/verify-otp.dart';
 import 'package:f_journey/features/auth/widgets/get-started/get-started.dart';
 import 'package:f_journey/features/auth/widgets/index.dart';
 import 'package:f_journey/features/auth/widgets/layout.dart';
@@ -25,6 +27,8 @@ class RouteName {
   static const String registerResult = '/register-result';
   static const String welcomeDriver = '/welcome-driver';
   static const String driverRegister = '/driver-register';
+  static const String verifyOtp = '/verify-otp';
+  static const String updatePw = '/update-pw';
 
   static const publicRoutes = [
     auth,
@@ -33,7 +37,9 @@ class RouteName {
     register,
     welcomeDriver,
     driverRegister,
-    registerResult
+    registerResult,
+    verifyOtp,
+    updatePw
   ];
 }
 
@@ -74,14 +80,6 @@ final router = GoRouter(
                   );
                 }),
             GoRoute(
-                path: RouteName.forgotPw,
-                builder: (context, state) {
-                  final TextTheme textTheme = Theme.of(context).textTheme;
-                  return ForgotPwWidget(
-                    textTheme: textTheme,
-                  );
-                }),
-            GoRoute(
                 path: RouteName.getStarted,
                 builder: (context, state) {
                   final TextTheme textTheme = Theme.of(context).textTheme;
@@ -94,6 +92,14 @@ final router = GoRouter(
                   return RegisterWidget(textTheme: textTheme);
                 })
           ]),
+      GoRoute(
+          path: RouteName.forgotPw,
+          builder: (context, state) {
+            final TextTheme textTheme = Theme.of(context).textTheme;
+            return ForgotPwWidget(
+              textTheme: textTheme,
+            );
+          }),
       GoRoute(
           path: RouteName.passengerRegister,
           builder: (context, state) {
@@ -118,5 +124,15 @@ final router = GoRouter(
           path: RouteName.driverRegister,
           builder: (context, state) {
             return const DriverRegisterWidget();
-          })
+          }),
+      GoRoute(
+          path: RouteName.verifyOtp,
+          builder: (context, state) {
+            return const VerifyOtpWidget();
+          }),
+      GoRoute(
+          path: RouteName.updatePw,
+          builder: (context, state) {
+            return const UpdatePasswordWidget();
+          }),
     ]);
