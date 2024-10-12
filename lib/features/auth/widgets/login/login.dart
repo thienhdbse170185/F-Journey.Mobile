@@ -10,11 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginWidget extends StatefulWidget {
-  const LoginWidget(
-      {super.key, required this.textTheme, required this.onToggle});
+  const LoginWidget({super.key, required this.textTheme});
 
   final TextTheme textTheme;
-  final VoidCallback onToggle;
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -123,12 +121,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                       height: 34,
                     ),
                   ),
-                  Text('Login',
+                  Text('Welcome back',
                       style: widget.textTheme.headlineLarge
                           ?.copyWith(fontSize: 32, color: Colors.black)),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter your email and password to log in',
+                    'Điền thông tin để tụi mình xác thực cho bạn nhé!',
                     style: widget.textTheme.bodyMedium?.copyWith(
                       color: Colors.black,
                     ),
@@ -141,7 +139,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   const SizedBox(height: 24),
                   CustomTextField(
                       controller: passwordController,
-                      labelText: 'Password',
+                      labelText: 'Password | Mật khẩu',
                       isObscure: !showPassword,
                       isPassword: true,
                       suffixIcon: IconButton(
@@ -167,7 +165,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 });
                               }),
                           Text(
-                            'Remember me',
+                            'Ghi nhớ đăng nhập',
                             style: widget.textTheme.bodyMedium?.copyWith(
                               color: Colors.black54,
                             ),
@@ -179,7 +177,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           context.push(RouteName.forgotPw);
                         },
                         child: Text(
-                          'Forgot password?',
+                          'Lỡ quên mật khẩu?',
                           style: widget.textTheme.bodyMedium?.copyWith(
                             color: Colors.purple.shade300,
                           ),
@@ -198,8 +196,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                       ),
                     ),
                     child: Text(
-                      'Log In',
-                      style: widget.textTheme.displaySmall?.copyWith(
+                      'Đăng nhập',
+                      style: widget.textTheme.titleMedium?.copyWith(
                         color: Colors.white,
                       ),
                     ),
@@ -209,15 +207,17 @@ class _LoginWidgetState extends State<LoginWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don't have an account?",
+                        "Bạn chưa có tài khoản?",
                         style: widget.textTheme.bodyMedium?.copyWith(
                           color: Colors.black54,
                         ),
                       ),
                       TextButton(
-                        onPressed: widget.onToggle,
+                        onPressed: () {
+                          context.push(RouteName.welcomeDriver);
+                        },
                         child: Text(
-                          'Sign Up',
+                          'Đăng ký tại đây',
                           style: widget.textTheme.bodyMedium?.copyWith(
                             color: Colors.purple.shade300,
                           ),
