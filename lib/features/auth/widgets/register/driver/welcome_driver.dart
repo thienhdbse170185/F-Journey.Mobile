@@ -22,7 +22,7 @@ class _WelcomeDriverWidgetState extends State<WelcomeDriverWidget>
   late Animation<double> _buttonOpacity;
 
   bool _isAgreeTerms = false;
-  bool _isDarkMode = false; // State variable for dark mode
+  final bool _isDarkMode = false; // State variable for dark mode
 
   @override
   void initState() {

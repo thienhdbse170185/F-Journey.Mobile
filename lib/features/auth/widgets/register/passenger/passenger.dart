@@ -20,8 +20,8 @@ class _PassengerRegistrationWidgetState
     extends State<PassengerRegistrationWidget> {
   late DateTime _selectedExpiryDate;
   late DateTime _selectedDOB;
-  TextEditingController _expiryDateController = TextEditingController();
-  TextEditingController _dobController = TextEditingController();
+  final TextEditingController _expiryDateController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
   File? _studentCardImage;
   File? _avatarImage;
   final ImagePicker _picker = ImagePicker();
