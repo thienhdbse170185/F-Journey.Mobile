@@ -70,7 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         idToken: googleAuth.idToken,
       );
       if (kDebugMode) {
-        print('Credential IDToken: ${credential.idToken}');
+        print('Credential AccessToken: ${credential.accessToken}');
       }
 
       // Sign in to Firebase with the Google credential
