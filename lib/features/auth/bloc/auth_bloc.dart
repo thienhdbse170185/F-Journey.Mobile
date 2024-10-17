@@ -1,6 +1,8 @@
+import 'package:f_journey/core/data/local_datasource.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
+import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,12 +99,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (userCredential == null) {
         emit(LoginGoogleError(message: 'UserCredential is null.'));
       } else {
+        await _onGetAuthToken(userCredential.credential!.accessToken!);
         emit(LoginGoogleSuccess());
       }
     } catch (e) {
       emit(LoginGoogleError(message: 'Error while login with Google'));
       if (kDebugMode) {
         print('Error while login with Google: $e');
+      }
+    }
+  }
+
+  Future<void> _onGetAuthToken(String accessTokenGoogle) async {
+    try {
+      // Call API to get access token
+      Result? authToken = await authRepository.getAuthToken(accessTokenGoogle);
+      if (kDebugMode) {
+        print('Access Token: ${authToken!.accessToken}');
+      }
+
+      // Save access token to Hive
+      await LocalDataSource.saveAccessToken(authToken!.accessToken);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error while saving access token: $e');
       }
     }
   }
