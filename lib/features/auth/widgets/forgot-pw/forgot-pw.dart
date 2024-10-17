@@ -2,7 +2,6 @@ import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class ForgotPwWidget extends StatefulWidget {

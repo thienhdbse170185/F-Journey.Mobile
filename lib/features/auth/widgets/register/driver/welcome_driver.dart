@@ -1,8 +1,6 @@
-import 'package:f_journey/core/common/cubits/theme_cubit.dart';
 import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class WelcomeDriverWidget extends StatefulWidget {
