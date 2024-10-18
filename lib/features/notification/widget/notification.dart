@@ -11,22 +11,9 @@ class _ActivityWidgetState extends State<ActivityWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading:
-            IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
-        title: const Text('Notifications'),
-        actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.person), onPressed: () {})
-        ],
-      ),
+      appBar: AppBar(title: const Text('Hoạt động')),
       body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Notification Screen'),
-          ],
-        ),
+        child: Text('Màn hình hoạt động'),
       ),
     );
   }
