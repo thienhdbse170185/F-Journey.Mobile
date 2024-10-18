@@ -1,4 +1,5 @@
 import 'package:f_journey/core/router.dart';
+import 'package:f_journey/features/trip/widgets/widget/home_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,116 +11,113 @@ class HomePassengerWidget extends StatefulWidget {
 }
 
 class _HomePassengerWidgetState extends State<HomePassengerWidget> {
-  void navigateToSelectLocation(String locationName) {
-    // Chuyển sang màn hình chọn điểm đi
-    context.push(RouteName.createTripRequest, extra: locationName);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const TextField(
-          decoration: InputDecoration(
-            hintText: 'Bạn cần đi nhờ đến đâu?',
-            labelText: 'Điểm đến',
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.notifications_outlined)),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(99.0),
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(
-                  'assets/images/avatar.jpg',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          )
-        ],
-        toolbarHeight: 80,
-      ),
+      appBar: const HomeAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.red),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Tp. Dĩ An, Bình Dương',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(decoration: TextDecoration.underline),
+                Expanded(
+                  child: Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Thanh toán',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Thêm thẻ', // Thay đổi giá trị này theo dữ liệu thực tế
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(fontSize: 18),
+                                  ),
+                                  const SizedBox(width: 28),
+                                  Icon(Icons.credit_card,
+                                      color:
+                                          Theme.of(context).colorScheme.primary)
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-                const Row(
-                  children: [
-                    Icon(Icons.thermostat, color: Colors.blue),
-                    SizedBox(width: 10),
-                    Icon(Icons.wb_sunny, color: Colors.orange),
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text('Gợi ý cho bạn',
-                    style: Theme.of(context).textTheme.titleLarge),
-                Text('Tất cả',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall
-                        ?.copyWith(decoration: TextDecoration.underline)),
+                const SizedBox(width: 16), // Khoảng cách giữa các thẻ
+                Expanded(
+                  child: Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Ví của bạn',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '0', // Thay đổi giá trị này theo dữ liệu thực tế
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: IconButton(
-                      onPressed: () {
-                        context.pushReplacement(RouteName.createTripRequest);
-                      },
-                      icon: const Icon(Icons.directions_car_rounded)),
-                ),
-                const SizedBox(height: 8),
-                Text('Tạo chuyến',
-                    style: Theme.of(context).textTheme.titleSmall)
-              ],
-            )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context
+              .push(RouteName.createTripRequest); // Thay đổi route theo nhu cầu
+        }, // Biểu tượng cho nút tạo chuyến
+        tooltip: 'Tạo chuyến đi',
+        child: const Icon(Icons.add_road_rounded), // Tooltip cho nút
       ),
     );
   }
