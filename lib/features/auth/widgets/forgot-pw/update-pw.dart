@@ -1,6 +1,8 @@
 import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
+import 'package:f_journey/core/router.dart';
 import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UpdatePasswordWidget extends StatefulWidget {
   const UpdatePasswordWidget({super.key});
@@ -59,7 +61,9 @@ class _UpdatePasswordWidgetState extends State<UpdatePasswordWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         width: MediaQuery.of(context).size.width,
         child: FilledButton(
-          onPressed: () {},
+          onPressed: () {
+            context.go(RouteName.getStarted);
+          },
           child: const Text('Lưu'),
         ),
       ),
