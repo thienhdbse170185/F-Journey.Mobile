@@ -27,5 +27,6 @@ class AuthRepository {
     } catch (e) {
       rethrow;
     }
+    return null;
   }
 }

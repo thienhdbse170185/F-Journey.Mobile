@@ -56,7 +56,8 @@ class _RegisterResultWidgetState extends State<RegisterResultWidget> {
               const SizedBox(height: 32),
               FilledButton(
                 onPressed: () {
-                  context.go(RouteName.getStarted);
+                  // context.go(RouteName.getStarted);
+                  context.go(RouteName.homePassenger);
                 },
                 child: const Text('Vâng, cảm ơn bạn!'),
               ),
