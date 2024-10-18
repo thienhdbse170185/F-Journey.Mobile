@@ -1,3 +1,6 @@
+import 'package:f_journey/features/message/widget/message.dart';
+import 'package:f_journey/features/notification/widget/notification.dart';
+import 'package:f_journey/features/payment/widget/payment.dart';
 import 'package:f_journey/features/trip/widgets/passenger/home.dart';
 import 'package:f_journey/features/trip/widgets/passenger/profile.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,9 @@ class _TabsWidgetState extends State<TabsWidget> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomePassengerWidget(),
+    ActivityWidget(),
+    PaymentWidget(),
+    MessageWidget(),
     ProfileWidget(),
   ];
 
@@ -31,18 +37,46 @@ class _TabsWidgetState extends State<TabsWidget> {
         children: _widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        enableFeedback: false, // Tắt phản hồi âm thanh và rung khi nhấn
+        type: BottomNavigationBarType
+            .fixed, // Đảm bảo tất cả item hiển thị đầy đủ
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
+            icon: _selectedIndex == 0
+                ? const Icon(Icons.home_rounded)
+                : const Icon(Icons.home_outlined),
+            label: 'Trang chủ',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
+            icon: _selectedIndex == 1
+                ? const Icon(Icons.work_history_rounded)
+                : const Icon(Icons.work_history_outlined),
+            label: 'Hoạt động',
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 2
+                ? const Icon(Icons.account_balance_wallet_rounded)
+                : const Icon(Icons.account_balance_wallet_outlined),
+            label: 'Thanh toán',
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 3
+                ? const Icon(Icons.message_rounded)
+                : const Icon(Icons.message_outlined),
+            label: 'Tin nhắn',
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 4
+                ? const Icon(Icons.account_circle_rounded)
+                : const Icon(Icons.account_circle_outlined),
+            label: 'Cá nhân',
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _onItemTapped, // Xử lý khi một item được nhấn
+        selectedFontSize: 12, // Điều chỉnh kích thước chữ của item được chọn
+        unselectedFontSize:
+            12, // Điều chỉnh kích thước chữ của item không được chọn
       ),
     );
   }
