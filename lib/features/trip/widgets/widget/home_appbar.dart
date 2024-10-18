@@ -5,7 +5,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      const Size.fromHeight(kToolbarHeight + 5); // Tăng chiều cao của AppBar
+      const Size.fromHeight(kToolbarHeight + 10); // Tăng chiều cao của AppBar
 
   @override
   Widget build(BuildContext context) {
