@@ -14,7 +14,7 @@ class _MessageWidgetState extends State<MessageWidget> {
       appBar: AppBar(
         title: const Text('Nhắn tin'),
       ),
-      body: const Text('Màn hình nhắn tin'),
+      body: const Center(child: Text('Màn hình nhắn tin')),
     );
   }
 }
