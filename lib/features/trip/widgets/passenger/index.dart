@@ -2,7 +2,7 @@ import 'package:f_journey/features/message/widget/message.dart';
 import 'package:f_journey/features/notification/widget/notification.dart';
 import 'package:f_journey/features/payment/widget/payment.dart';
 import 'package:f_journey/features/trip/widgets/passenger/home.dart';
-import 'package:f_journey/features/trip/widgets/passenger/profile.dart';
+import 'package:f_journey/features/user/widget/profile.dart';
 import 'package:flutter/material.dart';
 
 class TabsWidget extends StatefulWidget {
