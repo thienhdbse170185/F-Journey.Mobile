@@ -11,7 +11,9 @@ import 'package:f_journey/features/auth/widgets/register/passenger/checking.dart
 import 'package:f_journey/features/auth/widgets/register/passenger/passenger.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
 import 'package:f_journey/features/auth/widgets/register/register_result.dart';
-import 'package:f_journey/features/trip/widgets/home.dart';
+import 'package:f_journey/features/trip/widgets/passenger/home.dart';
+import 'package:f_journey/features/trip/widgets/passenger/index.dart';
+import 'package:f_journey/features/trip/widgets/passenger/trip_dest.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +31,8 @@ class RouteName {
   static const String driverRegister = '/driver-register';
   static const String verifyOtp = '/verify-otp';
   static const String updatePw = '/update-pw';
+  static const String homePassenger = '/passenger';
+  static const String createTripRequest = '/create-trip-request';
 
   static const publicRoutes = [
     auth,
@@ -39,7 +43,10 @@ class RouteName {
     driverRegister,
     registerResult,
     verifyOtp,
-    updatePw
+    updatePw,
+    //ONLY FOR DEV
+    homePassenger,
+    createTripRequest
   ];
 }
 
@@ -58,7 +65,7 @@ final router = GoRouter(
     routes: [
       GoRoute(
         path: RouteName.home,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomePassengerWidget(),
       ),
       ShellRoute(
           builder: (context, state, child) {
@@ -102,37 +109,29 @@ final router = GoRouter(
           }),
       GoRoute(
           path: RouteName.passengerRegister,
-          builder: (context, state) {
-            return const PassengerRegistrationWidget();
-          }),
+          builder: (context, state) => const PassengerRegistrationWidget()),
       GoRoute(
           path: RouteName.checking,
-          builder: (context, state) {
-            return const CheckingWidget();
-          }),
+          builder: (context, state) => const CheckingWidget()),
       GoRoute(
           path: RouteName.registerResult,
-          builder: (context, state) {
-            return const RegisterResultWidget();
-          }),
+          builder: (context, state) => const RegisterResultWidget()),
       GoRoute(
           path: RouteName.welcomeDriver,
-          builder: (context, state) {
-            return const WelcomeDriverWidget();
-          }),
+          builder: (context, state) => const WelcomeDriverWidget()),
       GoRoute(
           path: RouteName.driverRegister,
-          builder: (context, state) {
-            return const DriverRegisterWidget();
-          }),
+          builder: (context, state) => const DriverRegisterWidget()),
       GoRoute(
           path: RouteName.verifyOtp,
-          builder: (context, state) {
-            return const VerifyOtpWidget();
-          }),
+          builder: (context, state) => const VerifyOtpWidget()),
       GoRoute(
           path: RouteName.updatePw,
-          builder: (context, state) {
-            return const UpdatePasswordWidget();
-          }),
+          builder: (context, state) => const UpdatePasswordWidget()),
+      GoRoute(
+          path: RouteName.homePassenger,
+          builder: (context, state) => const TabsWidget()),
+      GoRoute(
+          path: RouteName.createTripRequest,
+          builder: (context, state) => const TripDestinationWidget())
     ]);
