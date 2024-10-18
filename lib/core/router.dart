@@ -11,7 +11,6 @@ import 'package:f_journey/features/auth/widgets/register/passenger/checking.dart
 import 'package:f_journey/features/auth/widgets/register/passenger/passenger.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
 import 'package:f_journey/features/auth/widgets/register/register_result.dart';
-import 'package:f_journey/features/trip/widgets/passenger/home.dart';
 import 'package:f_journey/features/trip/widgets/passenger/index.dart';
 import 'package:f_journey/features/trip/widgets/passenger/trip_dest.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +62,7 @@ final router = GoRouter(
         return null;
       }
       //return RouteName.getStarted
-      return RouteName.homePassenger; //ONLY FOR DEV
+      return RouteName.getStarted; //ONLY FOR DEV
     },
     routes: [
       ShellRoute(
