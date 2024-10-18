@@ -46,7 +46,10 @@ class RouteName {
     updatePw,
     //ONLY FOR DEV
     homePassenger,
-    createTripRequest
+    createTripRequest,
+    //PROD REMOVE THIS
+    passengerRegister,
+    registerResult
   ];
 }
 
@@ -60,13 +63,9 @@ final router = GoRouter(
         return null;
       }
       //return RouteName.getStarted
-      return RouteName.getStarted; //ONLY FOR DEV
+      return RouteName.homePassenger; //ONLY FOR DEV
     },
     routes: [
-      GoRoute(
-        path: RouteName.home,
-        builder: (context, state) => const HomePassengerWidget(),
-      ),
       ShellRoute(
           builder: (context, state, child) {
             final TextTheme textTheme = Theme.of(context).textTheme;
