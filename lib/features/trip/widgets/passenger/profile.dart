@@ -10,6 +10,10 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Hồ sơ'),
+        ),
+        body: const Text("Màn hình hồ sơ"));
   }
 }
