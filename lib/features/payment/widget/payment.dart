@@ -14,7 +14,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
       appBar: AppBar(
         title: const Text('Thanh Toán'),
       ),
-      body: const Text('Màn hình thanh toán'),
+      body: const Center(child: Text('Màn hình thanh toán')),
     );
   }
 }
