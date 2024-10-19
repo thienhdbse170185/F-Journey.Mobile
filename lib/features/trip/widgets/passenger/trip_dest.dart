@@ -12,6 +12,7 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
   String? toZone;
 
   final List<String> zones = ['Zone 1', 'Zone 2', 'Zone 3'];
+  final List<String> recentZones = ['Zone 2', 'Zone 3']; // Example recent zones
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +23,15 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
-                  labelText: "From Zone | Điểm đón",
-                  hintText: "Chọn điểm đón",
-                  border: OutlineInputBorder()),
+                labelText: "From Zone | Điểm đón",
+                hintText: "Chọn điểm đón",
+                border: OutlineInputBorder(),
+              ),
               value: fromZone,
               items: zones.map((String zone) {
                 return DropdownMenuItem<String>(
@@ -45,9 +48,10 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
-                  labelText: "To Zone | Điểm đi",
-                  hintText: "Chọn điểm đến",
-                  border: OutlineInputBorder()),
+                labelText: "To Zone | Điểm đi",
+                hintText: "Chọn điểm đến",
+                border: OutlineInputBorder(),
+              ),
               value: toZone,
               items: zones.map((String zone) {
                 return DropdownMenuItem<String>(
@@ -61,6 +65,30 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                 });
               },
             ),
+            const SizedBox(height: 24),
+            const Text(
+              'Gần đây',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: recentZones.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.history),
+                    title: Text(recentZones[index]),
+                    onTap: () {
+                      // Logic to select from recent zones
+                      setState(() {
+                        fromZone = recentZones[index];
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -68,7 +96,9 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
         padding: const EdgeInsets.all(16),
         width: MediaQuery.of(context).size.width,
         child: FilledButton(
-          onPressed: () {},
+          onPressed: () {
+            // Add logic for creating a trip
+          },
           child: const Text('Bắt đầu tạo chuyến đi'),
         ),
       ),
