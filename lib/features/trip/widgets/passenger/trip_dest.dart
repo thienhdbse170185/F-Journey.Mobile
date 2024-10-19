@@ -14,6 +14,8 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
   final List<String> zones = ['Zone 1', 'Zone 2', 'Zone 3'];
   final List<String> recentZones = ['Zone 2', 'Zone 3']; // Example recent zones
 
+  bool get isButtonEnabled => fromZone != null && toZone != null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,6 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: "From Zone | Điểm đi",
-                hintText: "Chọn điểm đi",
                 border: OutlineInputBorder(),
               ),
               value: fromZone,
@@ -49,7 +50,6 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
                 labelText: "To Zone | Điểm đến",
-                hintText: "Chọn điểm đến",
                 helperText:
                     "Bạn cần chọn điểm đi và điểm đến để tụi mình \ntìm Xế cho bạn nha. Cảm ơn bạn!",
                 border: OutlineInputBorder(),
@@ -98,9 +98,11 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
         padding: const EdgeInsets.all(16),
         width: MediaQuery.of(context).size.width,
         child: FilledButton(
-          onPressed: () {
-            // Add logic for creating a trip
-          },
+          onPressed: isButtonEnabled
+              ? () {
+                  // Add logic for creating a trip
+                }
+              : null, // Disable the button when not enough fields are selected
           child: const Text('Bắt đầu tạo chuyến đi'),
         ),
       ),
