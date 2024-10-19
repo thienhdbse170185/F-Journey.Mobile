@@ -1,4 +1,3 @@
-import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
 
 class TripDestinationWidget extends StatefulWidget {
@@ -9,23 +8,68 @@ class TripDestinationWidget extends StatefulWidget {
 }
 
 class _TripDestinationWidgetState extends State<TripDestinationWidget> {
+  String? fromZone;
+  String? toZone;
+
+  final List<String> zones = ['Zone 1', 'Zone 2', 'Zone 3'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bạn cần đi nhờ đến đâu?'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            SizedBox(height: 8),
-            TextFieldRequired(
-                label: "From Zone | Điểm đón", hintText: "Chọn điểm đón"),
-            SizedBox(height: 16),
-            TextFieldRequired(
-                label: "To Zone | Điểm đi", hintText: "Chọn điểm đến")
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                  labelText: "From Zone | Điểm đón",
+                  hintText: "Chọn điểm đón",
+                  border: OutlineInputBorder()),
+              value: fromZone,
+              items: zones.map((String zone) {
+                return DropdownMenuItem<String>(
+                  value: zone,
+                  child: Text(zone),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  fromZone = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                  labelText: "To Zone | Điểm đi",
+                  hintText: "Chọn điểm đến",
+                  border: OutlineInputBorder()),
+              value: toZone,
+              items: zones.map((String zone) {
+                return DropdownMenuItem<String>(
+                  value: zone,
+                  child: Text(zone),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  toZone = newValue;
+                });
+              },
+            ),
           ],
+        ),
+      ),
+      bottomSheet: Container(
+        padding: const EdgeInsets.all(16),
+        width: MediaQuery.of(context).size.width,
+        child: FilledButton(
+          onPressed: () {},
+          child: const Text('Bắt đầu tạo chuyến đi'),
         ),
       ),
     );
