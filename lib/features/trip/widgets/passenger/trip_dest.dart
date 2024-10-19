@@ -28,8 +28,8 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
-                labelText: "From Zone | Điểm đón",
-                hintText: "Chọn điểm đón",
+                labelText: "From Zone | Điểm đi",
+                hintText: "Chọn điểm đi",
                 border: OutlineInputBorder(),
               ),
               value: fromZone,
@@ -48,8 +48,10 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(
-                labelText: "To Zone | Điểm đi",
+                labelText: "To Zone | Điểm đến",
                 hintText: "Chọn điểm đến",
+                helperText:
+                    "Bạn cần chọn điểm đi và điểm đến để tụi mình \ntìm Xế cho bạn nha. Cảm ơn bạn!",
                 border: OutlineInputBorder(),
               ),
               value: toZone,
