@@ -62,7 +62,7 @@ final router = GoRouter(
         return null;
       }
       //return RouteName.getStarted
-      return RouteName.getStarted; //ONLY FOR DEV
+      return RouteName.homePassenger; //ONLY FOR DEV
     },
     routes: [
       ShellRoute(
