@@ -60,4 +60,13 @@ class AuthRepository {
       rethrow;
     }
   }
+
+  Future<bool?> loginDriver(String email, String password) async {
+    try {
+      bool? response = await authApiClient.loginDriver(email, password);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -66,4 +66,18 @@ class AuthApiClient {
       rethrow;
     }
   }
+
+  Future<bool?> loginDriver(String email, String password) async {
+    try {
+      final response = await dio.post(ApiEndpoints.login,
+          data: {'email': email, 'password': password, 'role': 'driver'});
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to login driver');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

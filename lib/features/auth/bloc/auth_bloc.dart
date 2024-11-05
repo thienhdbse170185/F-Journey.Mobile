@@ -43,12 +43,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoginError(message: 'Please enter valid email/password'));
         return;
       }
-      UserDto? user = await authRepository.getUserByEmail(event.email);
-      if (user == null) {
-        emit(LoginError(message: 'User not found'));
+      bool? user =
+          await authRepository.loginDriver(event.email, event.password);
+      if (user!) {
+        emit(LoginSuccess());
         return;
+      } else {
+        emit(LoginError(message: 'User not found'));
       }
-      emit(LoginSuccess());
     } catch (e) {
       emit(LoginError(message: 'User not found'));
       if (kDebugMode) {
