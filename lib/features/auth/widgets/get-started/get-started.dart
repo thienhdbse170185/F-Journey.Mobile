@@ -28,10 +28,14 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
           SuccessDialog.show(context);
           await Future.delayed(const Duration(milliseconds: 2900));
           SuccessDialog.hide(context);
-          context.go(RouteName.checking);
+          context.read<AuthBloc>().add(GetUserProfileStarted());
         } else if (state is LoginGoogleError) {
           // LoadingDialog.hide(context);
           SnackbarUtil.openFailureSnackbar(context, state.message);
+        } else if (state is UserDoesNotExist) {
+          context.go(RouteName.checking, extra: {'profile': state.profile});
+        } else if (state is UserAlreadyExists) {
+          context.go(RouteName.homePassenger);
         }
       },
       child: Scaffold(

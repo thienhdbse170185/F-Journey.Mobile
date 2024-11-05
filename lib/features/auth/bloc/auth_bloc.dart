@@ -2,6 +2,8 @@ import 'package:f_journey/core/data/local_datasource.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
+import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
+import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -19,6 +21,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<LoginGoogleStarted>(
       (event, emit) => _onLoginGoogleStarted(event, emit),
+    );
+    on<GetUserProfileStarted>(
+      (event, emit) => _onGetUserProfile(event, emit),
+    );
+    on<RegisterPassengerProfileStarted>(
+      (event, emit) => _onRegisterPassenger(event, emit),
     );
   }
 
@@ -113,7 +121,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onGetAuthToken(String accessTokenGoogle) async {
     try {
       // Call API to get access token
-      Result? authToken = await authRepository.getAuthToken(accessTokenGoogle);
+      GoogleResult? authToken =
+          await authRepository.getAuthToken(accessTokenGoogle);
       if (kDebugMode) {
         print('Access Token: ${authToken!.accessToken}');
       }
@@ -127,23 +136,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onCheckNewUserStarted(
-    CheckNewUserStarted event,
+  Future<void> _onGetUserProfile(
+    GetUserProfileStarted event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthInProgress());
     try {
-      UserDto? user = await authRepository
-          .getUserByEmail(event.userCredential.user!.email!);
-      if (user == null) {
-        emit(UserDoesNotExist());
+      String? accessToken = await LocalDataSource.getAccessToken();
+      if (accessToken != null) {
+        GetUserProfileResult? profile =
+            await authRepository.getUserProfile(accessToken);
+        if (profile != null && profile.verificationStatus == 'Init') {
+          emit(UserDoesNotExist(profile: profile));
+        } else {
+          emit(AuthError(message: 'Error while getting user profile'));
+        }
       } else {
-        emit(UserAlreadyExists());
+        emit(AuthError(message: 'Access token is null'));
       }
     } catch (e) {
       emit(CheckNewUserError(message: 'Error while checking new user'));
       if (kDebugMode) {
         print('Error while checking new user: $e');
+      }
+    }
+  }
+
+  Future<void> _onRegisterPassenger(
+      RegisterPassengerProfileStarted event, Emitter<AuthState> emit) async {
+    emit(RegisterPassengerProfileInProgress());
+    try {
+      bool? isRegistered =
+          await authRepository.registerPassenger(event.request);
+      if (isRegistered!) {
+        emit(RegisterPassengerProfileSuccess());
+      } else {
+        emit(RegisterPassengerProfileError(message: 'Failed to register'));
+      }
+    } catch (e) {
+      emit(RegisterPassengerProfileError(message: 'Error while registering'));
+      if (kDebugMode) {
+        print('Error while registering: $e');
       }
     }
   }

@@ -1,6 +1,6 @@
 class LoginGoogleResponse {
   final bool success;
-  final Result result;
+  final GoogleResult result;
 
   LoginGoogleResponse({required this.success, required this.result});
 
@@ -8,11 +8,11 @@ class LoginGoogleResponse {
     return LoginGoogleResponse(
       success: json['success'],
       result: json['success']
-          ? Result(
+          ? GoogleResult(
               accessToken: json['result']['accessToken'],
               refreshToken: json['result']['refreshToken'],
             )
-          : Result(
+          : GoogleResult(
               message: json['result']['message'],
             ),
     );
@@ -33,10 +33,10 @@ class LoginGoogleResponse {
   }
 }
 
-class Result {
+class GoogleResult {
   final String? accessToken;
   final String? refreshToken;
   final String? message;
 
-  Result({this.accessToken, this.refreshToken, this.message});
+  GoogleResult({this.accessToken, this.refreshToken, this.message});
 }

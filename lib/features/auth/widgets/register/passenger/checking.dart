@@ -1,10 +1,13 @@
 import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
+import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CheckingWidget extends StatefulWidget {
-  const CheckingWidget({super.key});
+  final GetUserProfileResult? userProfile;
+
+  const CheckingWidget({super.key, this.userProfile});
 
   @override
   State<CheckingWidget> createState() => _CheckingWidgetState();
@@ -124,7 +127,9 @@ class _CheckingWidgetState extends State<CheckingWidget>
                 opacity: _buttonOpacity,
                 child: FilledButton(
                   onPressed: () {
-                    context.push(RouteName.passengerRegister);
+                    context.push(RouteName.passengerRegister, extra: {
+                      'profile': widget.userProfile,
+                    });
                   },
                   child: const Text('Okay ^~^'),
                 ),

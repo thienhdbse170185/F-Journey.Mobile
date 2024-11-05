@@ -42,4 +42,16 @@ class CheckNewUserError extends AuthState {
 
 class UserAlreadyExists extends AuthState {}
 
-class UserDoesNotExist extends AuthState {}
+class UserDoesNotExist extends AuthState {
+  final GetUserProfileResult profile;
+  UserDoesNotExist({required this.profile});
+}
+
+class RegisterPassengerProfileError extends AuthState {
+  final String message;
+  RegisterPassengerProfileError({required this.message});
+}
+
+class RegisterPassengerProfileSuccess extends AuthState {}
+
+class RegisterPassengerProfileInProgress extends AuthState {}

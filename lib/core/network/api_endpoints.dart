@@ -1,13 +1,12 @@
 class ApiEndpoints {
   // Authentication Endpoints
   static const String login = "/auth/login";
-  static const String loginGoogle = "/authentication/google-login-passenger";
-  static const String register = "/auth/register";
+  static const String register = "/users";
   static const String logout = "/auth/logout";
 
   // User Endpoints
-  static const String getUserProfile = "/user/profile";
-  static const String updateUserProfile = "/user/update";
+  static const String getUserProfile = "/auth/users/profile";
+  static const String updateUserProfile = "/users/passenger";
 
   // Product Endpoints
   static const String getProducts = "/products";

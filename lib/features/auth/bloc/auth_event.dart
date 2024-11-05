@@ -16,6 +16,8 @@ class LoginEmailPasswordStarted extends AuthEvent {
 
 class LoginGoogleStarted extends AuthEvent {}
 
+class GetUserProfileStarted extends AuthEvent {}
+
 class CheckNewUserStarted extends AuthEvent {
   final UserCredential userCredential;
   CheckNewUserStarted({required this.userCredential});
@@ -30,4 +32,9 @@ class RegisterStarted extends AuthEvent {
     required this.password,
     required this.name,
   });
+}
+
+class RegisterPassengerProfileStarted extends AuthEvent {
+  final PassengerRegisterRequest request;
+  RegisterPassengerProfileStarted({required this.request});
 }

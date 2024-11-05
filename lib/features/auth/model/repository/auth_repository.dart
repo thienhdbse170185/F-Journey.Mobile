@@ -1,6 +1,8 @@
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/example/users.dart';
 import 'package:f_journey/features/auth/model/repository/auth_api_client.dart';
+import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
+import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 
 class AuthRepository {
@@ -17,7 +19,7 @@ class AuthRepository {
     }
   }
 
-  Future<Result?> getAuthToken(String accessTokenGoogle) async {
+  Future<GoogleResult?> getAuthToken(String accessTokenGoogle) async {
     try {
       LoginGoogleResponse? response =
           await authApiClient.getAuthToken(accessTokenGoogle);
@@ -28,5 +30,24 @@ class AuthRepository {
       rethrow;
     }
     return null;
+  }
+
+  Future<GetUserProfileResult?> getUserProfile(String accessToken) async {
+    try {
+      GetUserProfileResponse? profile =
+          await authApiClient.getUserProfile(accessToken);
+      return profile.result;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> registerPassenger(PassengerRegisterRequest request) async {
+    try {
+      bool? response = await authApiClient.registerPassenger(request);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

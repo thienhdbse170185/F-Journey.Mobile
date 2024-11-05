@@ -1,4 +1,5 @@
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
+import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/widgets/forgot-pw/forgot-pw.dart';
 import 'package:f_journey/features/auth/widgets/forgot-pw/update-pw.dart';
 import 'package:f_journey/features/auth/widgets/forgot-pw/verify-otp.dart';
@@ -58,11 +59,14 @@ final router = GoRouter(
         return null;
       }
       if (context.read<AuthBloc>().state is LoginSuccess ||
-          context.read<AuthBloc>().state is LoginGoogleSuccess) {
+          context.read<AuthBloc>().state is LoginGoogleSuccess ||
+          context.read<AuthBloc>().state is UserDoesNotExist ||
+          context.read<AuthBloc>().state is UserAlreadyExists ||
+          context.read<AuthBloc>().state is RegisterPassengerProfileSuccess) {
         return null;
       }
       //return RouteName.getStarted
-      return RouteName.homePassenger; //ONLY FOR DEV
+      return RouteName.getStarted; //ONLY FOR DEV
     },
     routes: [
       ShellRoute(
@@ -107,10 +111,22 @@ final router = GoRouter(
           }),
       GoRoute(
           path: RouteName.passengerRegister,
-          builder: (context, state) => const PassengerRegistrationWidget()),
+          builder: (context, state) {
+            final profile =
+                (state.extra as Map<String, GetUserProfileResult?>)['profile']!;
+            return PassengerRegistrationWidget(
+              userProfile: profile,
+            );
+          }),
       GoRoute(
           path: RouteName.checking,
-          builder: (context, state) => const CheckingWidget()),
+          builder: (context, state) {
+            final profile =
+                (state.extra as Map<String, GetUserProfileResult>)['profile']!;
+            return CheckingWidget(
+              userProfile: profile,
+            );
+          }),
       GoRoute(
           path: RouteName.registerResult,
           builder: (context, state) => const RegisterResultWidget()),
