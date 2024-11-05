@@ -40,12 +40,16 @@ class CheckNewUserError extends AuthState {
   CheckNewUserError({required this.message});
 }
 
-class UserAlreadyExists extends AuthState {}
+class ProfileUserApproved extends AuthState {}
 
 class UserDoesNotExist extends AuthState {
   final GetUserProfileResult profile;
   UserDoesNotExist({required this.profile});
 }
+
+class ProfileUserPending extends AuthState {}
+
+class ProfileUserRejected extends AuthState {}
 
 class RegisterPassengerProfileError extends AuthState {
   final String message;
@@ -55,3 +59,12 @@ class RegisterPassengerProfileError extends AuthState {
 class RegisterPassengerProfileSuccess extends AuthState {}
 
 class RegisterPassengerProfileInProgress extends AuthState {}
+
+class RegisterDriverProfileError extends AuthState {
+  final String message;
+  RegisterDriverProfileError({required this.message});
+}
+
+class RegisterDriverProfileSuccess extends AuthState {}
+
+class RegisterDriverProfileInProgress extends AuthState {}

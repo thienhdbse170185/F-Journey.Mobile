@@ -1,6 +1,7 @@
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/example/users.dart';
 import 'package:f_journey/features/auth/model/repository/auth_api_client.dart';
+import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
@@ -45,6 +46,15 @@ class AuthRepository {
   Future<bool?> registerPassenger(PassengerRegisterRequest request) async {
     try {
       bool? response = await authApiClient.registerPassenger(request);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> registerDriver(RegisterDriverRequest request) async {
+    try {
+      bool? response = await authApiClient.registerDriver(request);
       return response;
     } catch (e) {
       rethrow;

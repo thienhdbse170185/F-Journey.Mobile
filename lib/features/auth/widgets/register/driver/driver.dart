@@ -2,8 +2,14 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
+import 'package:f_journey/core/utils/snackbar_util.dart';
+import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
+import 'package:f_journey/features/auth/model/request/driver.dart';
+import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
+import 'package:f_journey/features/auth/model/request/vehicle.dart';
 import 'package:f_journey/features/auth/widgets/components/text_field_required.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -20,10 +26,100 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
   late DateTime _selectedDOB;
   final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  File? _studentCardImage;
-  File? _avatarImage;
+  final TextEditingController _licenseNumberController =
+      TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _licensePlateController = TextEditingController();
+  XFile? _licenseCardImage;
+  XFile? _registrationImage;
+  XFile? _vehicleImage;
+  XFile? _avatarImage;
   final ImagePicker _picker = ImagePicker();
   int _currentStep = 0;
+
+  void submitForm() {
+    // Gather data from text controllers
+    String fullName = _fullNameController.text.trim();
+    String phoneNumber = _phoneNumberController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+    String licenseNumber = _licenseNumberController.text.trim();
+    String expiryDate = _expiryDateController.text.trim();
+    String dob = _dobController.text.trim();
+    String licensePlate = _licensePlateController.text.trim();
+
+    // Perform validation
+    if (fullName.isEmpty ||
+        phoneNumber.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty ||
+        licenseNumber.isEmpty ||
+        expiryDate.isEmpty ||
+        dob.isEmpty ||
+        _licenseCardImage == null ||
+        _registrationImage == null ||
+        _vehicleImage == null ||
+        _avatarImage == null ||
+        licensePlate.isEmpty) {
+      // Show an error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('Please fill in all required fields and upload images.')),
+      );
+      return; // Exit if validation fails
+    }
+
+    // Additional validation for password confirmation
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Passwords do not match.')),
+      );
+      return;
+    }
+
+    // Proceed with form submission
+    // For example, you might send this data to your backend API
+    // Here is a placeholder for that logic:
+    final request = RegisterDriverRequest(
+      name: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      password: password,
+      profileImage: _avatarImage,
+      driver: Driver(
+        licenseNumber: licenseNumber,
+        verified: false,
+        licenseImage: _licenseCardImage,
+      ),
+      vehicle: Vehicle(
+        licensePlate: licensePlate,
+        vehicleType: 'Xe máy',
+        isVerified: false,
+        registration: '123456',
+        vehicleImage: _vehicleImage,
+        registrationImage: _registrationImage,
+      ),
+    );
+
+    try {
+      context
+          .read<AuthBloc>()
+          .add(RegisterDriverProfileStarted(request: request));
+    } catch (e) {
+      // Handle any errors that occur during the API call
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
 
   _selectExpiryDate(BuildContext context) async {
     await showDatePicker(
@@ -65,81 +161,115 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
     });
   }
 
-  Future<void> _pickImage(bool isStudentCard) async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        if (isStudentCard) {
-          _studentCardImage = File(pickedFile.path);
+  Future<void> _pickImage(String imageType) async {
+    try {
+      final pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+        maxHeight: 500,
+        maxWidth: 500,
+      );
+
+      if (pickedFile != null) {
+        if (pickedFile.path.endsWith('.jpeg') ||
+            pickedFile.path.endsWith('.jpg') ||
+            pickedFile.path.endsWith('.png')) {
+          setState(() {
+            if (imageType == 'license') {
+              _licenseCardImage = XFile(pickedFile.path);
+            } else if (imageType == 'registration') {
+              _registrationImage = XFile(pickedFile.path);
+            } else if (imageType == 'vehicle') {
+              _vehicleImage = XFile(pickedFile.path);
+            } else if (imageType == 'avatar') {
+              _avatarImage = XFile(pickedFile.path);
+            }
+          });
         } else {
-          _avatarImage = File(pickedFile.path);
+          print('Unsupported file type');
         }
-      });
+      }
+    } catch (e) {
+      print(e); // Handle errors
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              context.pop();
-            },
-          ),
-          title: const Text('Đăng ký'),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is RegisterDriverProfileSuccess) {
+          context.go(RouteName.registerResult);
+        } else if (state is RegisterDriverProfileError) {
+          SnackbarUtil.openFailureSnackbar(context, state.message);
+        } else if (state is RegisterPassengerProfileInProgress) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Đợi xíu...")),
+          );
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                showSettingsBottomSheet(context);
+                context.pop();
               },
             ),
-          ],
-        ),
-        body: Column(
-          children: [
-            LinearProgressIndicator(
-              borderRadius: BorderRadius.circular(8),
-              value: (_currentStep + 1) / 2,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: _currentStep == 0
-                      ? _buildDriverLicenseRegistration(context)
-                      : _buildAccountRegistration(context),
-                ),
+            title: const Text('Đăng ký'),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {
+                  showSettingsBottomSheet(context);
+                },
               ),
-            )
-          ],
-        ),
-        bottomSheet: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          width: MediaQuery.of(context).size.width,
-          child: FilledButton(
-            onPressed: () {
-              // context.go(RouteName.registerResult);
-              // context.push(RouteName.registerResult); //ONLY FOR DEV
-              setState(() {
-                if (_currentStep < 1) {
-                  _currentStep++;
-                } else {
-                  // context.go(RouteName.registerResult);
-                  context.push(RouteName.registerResult); //ONLY FOR DEV UI
-                }
-              });
-            },
-            child: _currentStep == 1
-                ? const Text('Mình đã sẵn sàng!')
-                : const Text('Tiếp tục'),
+            ],
           ),
-        ));
+          body: Column(
+            children: [
+              LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(8),
+                value: (_currentStep + 1) / 2,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
+                    child: _currentStep == 0
+                        ? _buildDriverLicenseRegistration(context)
+                        : _buildAccountRegistration(context),
+                  ),
+                ),
+              )
+            ],
+          ),
+          bottomSheet: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            width: MediaQuery.of(context).size.width,
+            child: FilledButton(
+              onPressed: () {
+                // context.go(RouteName.registerResult);
+                // context.push(RouteName.registerResult); //ONLY FOR DEV
+                setState(() {
+                  if (_currentStep < 1) {
+                    _currentStep++;
+                  } else {
+                    // context.go(RouteName.registerResult);
+                    // context.push(RouteName.registerResult); //ONLY FOR DEV UI
+                    submitForm();
+                  }
+                });
+              },
+              child: _currentStep == 1
+                  ? const Text('Mình đã sẵn sàng!')
+                  : const Text('Tiếp tục'),
+            ),
+          )),
+    );
   }
 
   Widget _buildDriverLicenseRegistration(BuildContext context) {
@@ -170,12 +300,12 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
                       radius: const Radius.circular(12),
                       strokeWidth: 1,
                       child: InkWell(
-                        onTap: () => _pickImage(true),
+                        onTap: () => _pickImage('license'),
                         child: SizedBox(
                             width: 120,
-                            child: _studentCardImage != null
+                            child: _licenseCardImage != null
                                 ? Image.file(
-                                    _studentCardImage!,
+                                    File(_licenseCardImage!.path),
                                     fit: BoxFit.cover,
                                   )
                                 : Column(
@@ -225,12 +355,12 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
                       radius: const Radius.circular(12),
                       strokeWidth: 1,
                       child: InkWell(
-                        onTap: () => _pickImage(false),
+                        onTap: () => _pickImage('registration'),
                         child: SizedBox(
                             width: 120,
-                            child: _avatarImage != null
+                            child: _registrationImage != null
                                 ? Image.file(
-                                    _avatarImage!,
+                                    File(_registrationImage!.path),
                                     fit: BoxFit.cover,
                                   )
                                 : SizedBox(
@@ -291,12 +421,12 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
                       radius: const Radius.circular(12),
                       strokeWidth: 1,
                       child: InkWell(
-                        onTap: () => _pickImage(false),
+                        onTap: () => _pickImage('vehicle'),
                         child: SizedBox(
                             width: 120,
-                            child: _avatarImage != null
+                            child: _vehicleImage != null
                                 ? Image.file(
-                                    _avatarImage!,
+                                    File(_vehicleImage!.path),
                                     fit: BoxFit.cover,
                                   )
                                 : SizedBox(
@@ -329,9 +459,17 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              const TextFieldRequired(
-                  label: 'License Number | Số giấy phép lái xe',
-                  hintText: 'Nhập mã số thẻ sinh viên'),
+              TextFieldRequired(
+                label: 'License Number | Số giấy phép lái xe',
+                hintText: 'Nhập số giấy phép lái xe',
+                controller: _licenseNumberController,
+              ),
+              const SizedBox(height: 32),
+              TextFieldRequired(
+                label: 'License Plate | Biển số xe',
+                hintText: 'Nhập biển số xe',
+                controller: _licensePlateController,
+              ),
               const SizedBox(height: 32),
               TextFieldRequired(
                 label: 'Expiry Date | Ngày hết hạn',
@@ -343,13 +481,6 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
                 },
                 controller: _expiryDateController,
               ),
-              const SizedBox(height: 32),
-              const TextFieldRequired(
-                  label: 'Full Name | Họ và Tên', hintText: 'Nhập họ và tên'),
-              const SizedBox(height: 32),
-              const TextFieldRequired(
-                  label: 'Phone Number | Số điện thoại',
-                  hintText: 'Nhập số điện thoại'),
               const SizedBox(height: 32),
               DropdownMenu(
                 label: RichText(
@@ -417,12 +548,12 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
                       radius: const Radius.circular(12),
                       strokeWidth: 1,
                       child: InkWell(
-                        onTap: () => _pickImage(false),
+                        onTap: () => _pickImage('avatar'),
                         child: SizedBox(
                             width: 120,
                             child: _avatarImage != null
                                 ? Image.file(
-                                    _avatarImage!,
+                                    File(_avatarImage!.path),
                                     fit: BoxFit.cover,
                                   )
                                 : SizedBox(
@@ -453,29 +584,40 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
         Form(
             child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: const Column(
+          child: Column(
             children: [
               TextFieldRequired(
-                  label: 'Full Name | Họ và Tên', hintText: 'Nhập họ và tên'),
-              SizedBox(height: 32),
-              TextFieldRequired(label: 'Email', hintText: 'Nhập email'),
-              SizedBox(height: 32),
+                label: 'Full Name | Họ và Tên',
+                hintText: 'Nhập họ và tên',
+                controller: _fullNameController,
+              ),
+              const SizedBox(height: 32),
               TextFieldRequired(
-                  label: 'Phone Number | Số điện thoại',
-                  hintText: 'Nhập số điện thoại'),
-              SizedBox(height: 32),
+                label: 'Email',
+                hintText: 'Nhập email',
+                controller: _emailController,
+              ),
+              const SizedBox(height: 32),
+              TextFieldRequired(
+                label: 'Phone Number | Số điện thoại',
+                hintText: 'Nhập số điện thoại',
+                controller: _phoneNumberController,
+              ),
+              const SizedBox(height: 32),
               TextFieldRequired(
                 label: 'Password | Mật khẩu',
                 hintText: 'Nhập mật khẩu',
                 obscureText: true,
+                controller: _passwordController,
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               TextFieldRequired(
                 label: 'Confirm Password | Xác nhận mật khẩu',
                 hintText: 'Nhập lại mật khẩu',
                 obscureText: true,
+                controller: _confirmPasswordController,
               ),
-              SizedBox(height: 96),
+              const SizedBox(height: 96),
             ],
           ),
         ))

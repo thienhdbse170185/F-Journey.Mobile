@@ -35,7 +35,6 @@ class PassengerRegisterRequest {
   }
 
   Future<Map<String, dynamic>> toJson() async => {
-        'Id': id,
         'Name': name,
         'Email': email,
         'PhoneNumber': phoneNumber,

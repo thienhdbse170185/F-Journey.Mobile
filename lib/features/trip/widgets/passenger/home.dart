@@ -49,7 +49,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                               Row(
                                 children: [
                                   Text(
-                                    'Thêm thẻ', // Thay đổi giá trị này theo dữ liệu thực tế
+                                    'Nạp tiền', // Thay đổi giá trị này theo dữ liệu thực tế
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium

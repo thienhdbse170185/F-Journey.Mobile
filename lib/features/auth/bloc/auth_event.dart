@@ -38,3 +38,8 @@ class RegisterPassengerProfileStarted extends AuthEvent {
   final PassengerRegisterRequest request;
   RegisterPassengerProfileStarted({required this.request});
 }
+
+class RegisterDriverProfileStarted extends AuthEvent {
+  final RegisterDriverRequest request;
+  RegisterDriverProfileStarted({required this.request});
+}

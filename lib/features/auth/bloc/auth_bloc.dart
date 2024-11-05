@@ -2,6 +2,7 @@ import 'package:f_journey/core/data/local_datasource.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
+import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
@@ -27,6 +28,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<RegisterPassengerProfileStarted>(
       (event, emit) => _onRegisterPassenger(event, emit),
+    );
+    on<RegisterDriverProfileStarted>(
+      (event, emit) => _onRegisterDriver(event, emit),
     );
   }
 
@@ -146,8 +150,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (accessToken != null) {
         GetUserProfileResult? profile =
             await authRepository.getUserProfile(accessToken);
-        if (profile != null && profile.verificationStatus == 'Init') {
-          emit(UserDoesNotExist(profile: profile));
+        if (profile != null) {
+          if (profile.verificationStatus == 'Init') {
+            emit(UserDoesNotExist(profile: profile));
+          } else if (profile.verificationStatus == 'Pending') {
+            emit(ProfileUserPending());
+          } else if (profile.verificationStatus == 'Approved') {
+            emit(ProfileUserApproved());
+          } else {
+            emit(ProfileUserRejected());
+          }
         } else {
           emit(AuthError(message: 'Error while getting user profile'));
         }
@@ -175,6 +187,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(RegisterPassengerProfileError(message: 'Error while registering'));
+      if (kDebugMode) {
+        print('Error while registering: $e');
+      }
+    }
+  }
+
+  Future<void> _onRegisterDriver(
+      RegisterDriverProfileStarted event, Emitter<AuthState> emit) async {
+    emit(RegisterDriverProfileInProgress());
+    try {
+      bool? isRegistered = await authRepository.registerDriver(event.request);
+      if (isRegistered!) {
+        emit(RegisterDriverProfileSuccess());
+      } else {
+        emit(RegisterDriverProfileError(message: 'Failed to register'));
+      }
+    } catch (e) {
+      emit(RegisterDriverProfileError(message: 'Error while registering'));
       if (kDebugMode) {
         print('Error while registering: $e');
       }

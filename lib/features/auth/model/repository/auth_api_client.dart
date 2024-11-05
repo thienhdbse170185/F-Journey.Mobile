@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:f_journey/core/network/api_endpoints.dart';
+import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
@@ -46,6 +47,20 @@ class AuthApiClient {
         return true;
       } else {
         throw Exception('Failed to register passenger');
+      }
+    } on DioException catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> registerDriver(RegisterDriverRequest request) async {
+    try {
+      FormData formData = FormData.fromMap(await request.toJson());
+      final response = await dio.post(ApiEndpoints.register, data: formData);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to register driver');
       }
     } on DioException catch (e) {
       rethrow;

@@ -1,26 +1,32 @@
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+
 class Driver {
   String licenseNumber;
   bool verified;
-  String licenseImageUrl;
+  XFile? licenseImage;
 
   Driver({
     required this.licenseNumber,
     required this.verified,
-    required this.licenseImageUrl,
+    required this.licenseImage,
   });
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
       licenseNumber: json['licenseNumber'],
       verified: json['verified'],
-      licenseImageUrl: json['licenseImageUrl'],
+      licenseImage: json['licenseImageUrl'],
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Future<Map<String, dynamic>> toJson() async {
     return {
-      'licenseNumber': licenseNumber,
-      'verified': verified,
-      'licenseImageUrl': licenseImageUrl,
+      'LicenseNumber': licenseNumber,
+      'Verified': verified,
+      'LicenseImageUrl': await MultipartFile.fromFile(licenseImage!.path,
+          filename: licenseImage!.name,
+          contentType: MediaType('image', 'jpeg')),
     };
   }
 }

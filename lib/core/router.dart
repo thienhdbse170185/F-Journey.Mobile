@@ -61,7 +61,7 @@ final router = GoRouter(
       if (context.read<AuthBloc>().state is LoginSuccess ||
           context.read<AuthBloc>().state is LoginGoogleSuccess ||
           context.read<AuthBloc>().state is UserDoesNotExist ||
-          context.read<AuthBloc>().state is UserAlreadyExists ||
+          context.read<AuthBloc>().state is ProfileUserApproved ||
           context.read<AuthBloc>().state is RegisterPassengerProfileSuccess) {
         return null;
       }
@@ -129,7 +129,12 @@ final router = GoRouter(
           }),
       GoRoute(
           path: RouteName.registerResult,
-          builder: (context, state) => const RegisterResultWidget()),
+          builder: (context, state) {
+            final isRejected = state.extra as bool?;
+            return RegisterResultWidget(
+              isRejected: isRejected,
+            );
+          }),
       GoRoute(
           path: RouteName.welcomeDriver,
           builder: (context, state) => const WelcomeDriverWidget()),

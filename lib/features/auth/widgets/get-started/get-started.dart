@@ -34,8 +34,12 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
           SnackbarUtil.openFailureSnackbar(context, state.message);
         } else if (state is UserDoesNotExist) {
           context.go(RouteName.checking, extra: {'profile': state.profile});
-        } else if (state is UserAlreadyExists) {
+        } else if (state is ProfileUserApproved) {
           context.go(RouteName.homePassenger);
+        } else if (state is ProfileUserPending) {
+          context.go(RouteName.registerResult);
+        } else if (state is ProfileUserRejected) {
+          context.go(RouteName.registerResult, extra: {'isRejected': true});
         }
       },
       child: Scaffold(
