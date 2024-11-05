@@ -72,10 +72,8 @@ class _LoginWidgetState extends State<LoginWidget> {
           if (state is AuthInProgress) {
             LoadingDialog.show(context);
           } else if (state is LoginSuccess) {
-            LoadingDialog.hide(context);
-            SuccessDialog.show(context);
-            await Future.delayed(const Duration(milliseconds: 2800));
-            SuccessDialog.hide(context);
+            SnackbarUtil.openSuccessSnackbar(context, 'Login success');
+            context.go(RouteName.homeDriver);
           } else if (state is LoginError) {
             LoadingDialog.hide(context);
             SnackbarUtil.openFailureSnackbar(context, state.message);

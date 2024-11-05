@@ -3,6 +3,7 @@ import 'package:f_journey/core/network/api_endpoints.dart';
 import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
+import 'package:f_journey/features/auth/model/response/login_driver_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 
 class AuthApiClient {
@@ -67,12 +68,13 @@ class AuthApiClient {
     }
   }
 
-  Future<bool?> loginDriver(String email, String password) async {
+  Future<LoginDriverResponse?> loginDriver(
+      String email, String password) async {
     try {
       final response = await dio.post(ApiEndpoints.login,
           data: {'email': email, 'password': password, 'role': 'driver'});
       if (response.statusCode == 200) {
-        return true;
+        return LoginDriverResponse.fromJson(response.data);
       } else {
         throw Exception('Failed to login driver');
       }

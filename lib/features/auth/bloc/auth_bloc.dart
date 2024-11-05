@@ -5,6 +5,7 @@ import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
 import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
+import 'package:f_journey/features/auth/model/response/login_driver_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -43,9 +44,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LoginError(message: 'Please enter valid email/password'));
         return;
       }
-      bool? user =
+      LoginDriverResponse? user =
           await authRepository.loginDriver(event.email, event.password);
-      if (user!) {
+      if (user != null) {
+        await LocalDataSource.saveAccessToken(user.result.accessToken);
         emit(LoginSuccess());
         return;
       } else {

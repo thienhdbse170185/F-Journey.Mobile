@@ -12,6 +12,7 @@ import 'package:f_journey/features/auth/widgets/register/passenger/checking.dart
 import 'package:f_journey/features/auth/widgets/register/passenger/passenger.dart';
 import 'package:f_journey/features/auth/widgets/register/register.dart';
 import 'package:f_journey/features/auth/widgets/register/register_result.dart';
+import 'package:f_journey/features/trip/widgets/driver/index.dart';
 import 'package:f_journey/features/trip/widgets/passenger/index.dart';
 import 'package:f_journey/features/trip/widgets/passenger/trip_dest.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class RouteName {
   static const String updatePw = '/update-pw';
   static const String homePassenger = '/passenger';
   static const String createTripRequest = '/create-trip-request';
+  static const String homeDriver = '/driver';
 
   static const publicRoutes = [
     auth,
@@ -152,5 +154,8 @@ final router = GoRouter(
           builder: (context, state) => const TabsWidget()),
       GoRoute(
           path: RouteName.createTripRequest,
-          builder: (context, state) => const TripDestinationWidget())
+          builder: (context, state) => const TripDestinationWidget()),
+      GoRoute(
+          path: RouteName.homeDriver,
+          builder: (context, state) => const TabsDriverWidget())
     ]);

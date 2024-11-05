@@ -4,6 +4,7 @@ import 'package:f_journey/features/auth/model/repository/auth_api_client.dart';
 import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';
 import 'package:f_journey/features/auth/model/response/get_user_profile_response.dart';
+import 'package:f_journey/features/auth/model/response/login_driver_response.dart';
 import 'package:f_journey/features/auth/model/response/login_google_response.dart';
 
 class AuthRepository {
@@ -61,9 +62,11 @@ class AuthRepository {
     }
   }
 
-  Future<bool?> loginDriver(String email, String password) async {
+  Future<LoginDriverResponse?> loginDriver(
+      String email, String password) async {
     try {
-      bool? response = await authApiClient.loginDriver(email, password);
+      LoginDriverResponse? response =
+          await authApiClient.loginDriver(email, password);
       return response;
     } catch (e) {
       rethrow;
