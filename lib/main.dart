@@ -1,35 +1,55 @@
+import 'package:f_journey/core/common/cubits/theme_cubit.dart';
+import 'package:f_journey/core/network/http_client.dart';
 import 'package:f_journey/core/router.dart';
-import 'package:f_journey/core/theme/text_theme.dart';
+import 'package:f_journey/core/theme/theme.dart';
+import 'package:f_journey/core/theme/util.dart';
 import 'package:f_journey/features/auth/bloc/auth_bloc.dart';
+import 'package:f_journey/features/auth/model/repository/auth_api_client.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
 import 'package:f_journey/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/adapters.dart';
 
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+            create: (context) =>
+                AuthRepository(authApiClient: AuthApiClient(dio: dio))),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider(create: (context) => AuthRepository()),
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(authRepository: context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => ThemeCubit(), // Add ThemeCubit
+          ),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-                create: (context) =>
-                    AuthBloc(authRepository: context.read<AuthRepository>()))
-          ],
-          child: const AppContent(),
-        ));
+        child: const AppContent(),
+      ),
+    );
   }
 }
 
@@ -38,14 +58,16 @@ class AppContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
-        disabledColor: Colors.white70,
-        textTheme: customTextTheme,
-        useMaterial3: true,
-      ),
-      routerConfig: router,
+    TextTheme textTheme = createTextTheme(context, "Roboto", "Roboto");
+    MaterialTheme theme = MaterialTheme(textTheme);
+
+    return BlocBuilder<ThemeCubit, bool>(
+      builder: (context, themeMode) {
+        return MaterialApp.router(
+          theme: themeMode == true ? theme.dark() : theme.light(),
+          routerConfig: router,
+        );
+      },
     );
   }
 }
