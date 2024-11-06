@@ -37,9 +37,8 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
         children: _widgetOptions,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        enableFeedback: false, // Tắt phản hồi âm thanh và rung khi nhấn
-        type: BottomNavigationBarType
-            .fixed, // Đảm bảo tất cả item hiển thị đầy đủ
+        enableFeedback: false,
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: _selectedIndex == 0

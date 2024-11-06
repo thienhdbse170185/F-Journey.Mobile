@@ -21,4 +21,7 @@ class ApiEndpoints {
   static const String createOrder = "/orders/create";
   static const String updateOrder = "/orders/update";
   static const String deleteOrder = "/orders/delete";
+
+  // Zone Endpoints
+  static const String getZones = "/zones";
 }
