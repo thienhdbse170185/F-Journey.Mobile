@@ -1,6 +1,5 @@
 import 'package:f_journey/core/data/local_datasource.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
-import 'package:f_journey/features/auth/model/dto/user_dto.dart';
 import 'package:f_journey/features/auth/model/repository/auth_repository.dart';
 import 'package:f_journey/features/auth/model/request/driver_register_request.dart';
 import 'package:f_journey/features/auth/model/request/passenger_register_request.dart';

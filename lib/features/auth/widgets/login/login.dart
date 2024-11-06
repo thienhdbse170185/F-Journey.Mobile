@@ -1,5 +1,4 @@
 import 'package:f_journey/core/common/widgets/dialog/loading_dialog.dart';
-import 'package:f_journey/core/common/widgets/dialog/success_dialog.dart';
 import 'package:f_journey/core/common/widgets/text_field.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/keyboard_util.dart';

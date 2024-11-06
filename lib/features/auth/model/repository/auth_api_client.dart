@@ -49,7 +49,7 @@ class AuthApiClient {
       } else {
         throw Exception('Failed to register passenger');
       }
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
   }
@@ -63,7 +63,7 @@ class AuthApiClient {
       } else {
         throw Exception('Failed to register driver');
       }
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
   }

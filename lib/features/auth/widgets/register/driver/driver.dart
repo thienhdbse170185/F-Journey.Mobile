@@ -70,7 +70,7 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
         licensePlate.isEmpty) {
       // Show an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content:
                 Text('Please fill in all required fields and upload images.')),
       );
@@ -80,7 +80,7 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
     // Additional validation for password confirmation
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Passwords do not match.')),
+        const SnackBar(content: Text('Passwords do not match.')),
       );
       return;
     }

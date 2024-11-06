@@ -39,8 +39,8 @@ class PassengerRegisterRequest {
         'Email': email,
         'PhoneNumber': phoneNumber,
         'ProfileImageUrl': profileImageUrl,
-        'StudentIdCardUrl': await MultipartFile.fromFile(studentIdCardUrl!.path,
-            filename: studentIdCardUrl!.name,
+        'StudentIdCardUrl': await MultipartFile.fromFile(studentIdCardUrl.path,
+            filename: studentIdCardUrl.name,
             contentType: MediaType('image', 'jpeg')),
         'StudentId': studentId,
       };

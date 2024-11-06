@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class RegisterResultWidget extends StatefulWidget {
   final bool? isRejected; // Use final to ensure immutability
-  RegisterResultWidget({super.key, this.isRejected});
+  const RegisterResultWidget({super.key, this.isRejected});
 
   @override
   State<RegisterResultWidget> createState() => _RegisterResultWidgetState();
