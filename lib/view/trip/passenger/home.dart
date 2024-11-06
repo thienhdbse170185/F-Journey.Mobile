@@ -11,6 +11,50 @@ class HomePassengerWidget extends StatefulWidget {
 }
 
 class _HomePassengerWidgetState extends State<HomePassengerWidget> {
+  final TextEditingController _amountController = TextEditingController();
+
+  // Hàm hiển thị dialog nhập số tiền
+  void _showPaymentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Nhập số tiền bạn muốn nạp'),
+          content: TextField(
+            controller: _amountController,
+            decoration: const InputDecoration(
+              hintText: 'Nhập số tiền',
+            ),
+            keyboardType: TextInputType.number,
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Đóng dialog
+                Navigator.of(context).pop();
+              },
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Kiểm tra và thực hiện nạp tiền
+                final amount = _amountController.text;
+                if (amount.isNotEmpty) {
+                  // Gửi số tiền vào API hoặc xử lý logic nạp tiền ở đây
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Nạp tiền: $amount')),
+                  );
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Xác nhận'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,45 +69,51 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Thanh toán',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
+                  child: GestureDetector(
+                    onTap: () {
+                      _showPaymentDialog();
+                    },
+                    child: Card(
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Thanh toán',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Nạp tiền', // Thay đổi giá trị này theo dữ liệu thực tế
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(fontSize: 18),
+                                    ),
+                                    const SizedBox(width: 28),
+                                    Icon(Icons.credit_card,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .outline),
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Nạp tiền', // Thay đổi giá trị này theo dữ liệu thực tế
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(fontSize: 18),
-                                  ),
-                                  const SizedBox(width: 28),
-                                  Icon(Icons.credit_card,
-                                      color:
-                                          Theme.of(context).colorScheme.primary)
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
+                                            .primary)
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

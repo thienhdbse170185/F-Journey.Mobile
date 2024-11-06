@@ -159,7 +159,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           } else if (profile.verificationStatus == 'Pending') {
             emit(ProfileUserPending());
           } else if (profile.verificationStatus == 'Approved') {
-            emit(ProfileUserApproved());
+            emit(ProfileUserApproved(profile: profile));
           } else {
             emit(ProfileUserRejected());
           }

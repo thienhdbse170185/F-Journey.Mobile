@@ -24,4 +24,7 @@ class ApiEndpoints {
 
   // Zone Endpoints
   static const String getZones = "/zones";
+
+  // Trip Request Endpoints
+  static const String createTripRequest = "/triprequests";
 }
