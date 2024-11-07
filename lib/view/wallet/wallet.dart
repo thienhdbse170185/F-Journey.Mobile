@@ -82,7 +82,7 @@ class _WalletWidgetState extends State<WalletWidget> {
     return BlocListener<WalletCubit, WalletState>(
       listener: (context, state) {
         if (state is ImportWalletInProgress) {
-          SnackbarUtil.openSnackbar(context, "Importing wallet...");
+          SnackbarUtil.openSnackbar(context, "Processing...");
         } else if (state is ImportWalletSuccess) {
           _launchPaymentUrl(state.paymentUrl);
         } else if (state is ImportWalletFailure) {

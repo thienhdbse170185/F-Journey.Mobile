@@ -25,7 +25,7 @@ class WalletCubit extends Cubit<WalletState> {
     try {
       final response = await walletRepository.checkPayment(vnpayResponse);
       emit(CheckPaymentSuccess(response));
-    } on Exception catch (e) {
+    } on Exception {
       emit(CheckPaymentFailure('Error! Cannot check payment'));
     }
   }

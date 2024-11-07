@@ -1,9 +1,12 @@
+import 'package:f_journey/core/utils/price_util.dart';
 import 'package:f_journey/view/message/message.dart';
 import 'package:f_journey/view/notification/notification.dart';
 import 'package:f_journey/view/payment/payment.dart';
 import 'package:f_journey/view/trip/passenger/home.dart';
 import 'package:f_journey/view/profile/profile.dart';
+import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TabsWidget extends StatefulWidget {
   const TabsWidget({super.key});
@@ -14,14 +17,32 @@ class TabsWidget extends StatefulWidget {
 
 class _TabsWidgetState extends State<TabsWidget> {
   int _selectedIndex = 0;
+  String balance = "0";
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePassengerWidget(),
-    NotificationWidget(),
-    PaymentWidget(),
-    MessageWidget(),
-    ProfileWidget(),
-  ];
+  late List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<AuthBloc>().state;
+    if (state is ProfileUserApproved) {
+      final balanceFormated =
+          PriceUtil.formatPrice(state.profile.wallet.balance);
+      setState(() {
+        balance = balanceFormated;
+      });
+    }
+
+    _widgetOptions = <Widget>[
+      HomePassengerWidget(
+        balance: balance,
+      ),
+      const NotificationWidget(),
+      const PaymentWidget(),
+      const MessageWidget(),
+      const ProfileWidget(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

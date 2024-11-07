@@ -28,7 +28,7 @@ class WalletApiClient {
       if (response.statusCode == 200) {
         return response.data['result'] as String;
       }
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
     return '';
