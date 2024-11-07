@@ -71,7 +71,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      _showPaymentDialog();
+                      context.push(RouteName.wallet);
                     },
                     child: Card(
                       elevation: 2,

@@ -5,6 +5,8 @@ import 'package:f_journey/core/theme/theme.dart';
 import 'package:f_journey/core/theme/util.dart';
 import 'package:f_journey/model/repository/trip_request/trip_request_api_client.dart';
 import 'package:f_journey/model/repository/trip_request/trip_request_repository.dart';
+import 'package:f_journey/model/repository/wallet/wallet_api_client.dart';
+import 'package:f_journey/model/repository/wallet/wallet_repository.dart';
 import 'package:f_journey/model/repository/zone/zone_api_client.dart';
 import 'package:f_journey/model/repository/zone/zone_repository.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:f_journey/model/repository/auth/auth_api_client.dart';
 import 'package:f_journey/model/repository/auth/auth_repository.dart';
 import 'package:f_journey/firebase_options.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
+import 'package:f_journey/viewmodel/wallet/wallet_cubit.dart';
 import 'package:f_journey/viewmodel/zone/zone_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +52,9 @@ class _MyAppState extends State<MyApp> {
         RepositoryProvider(
             create: (context) => TripRequestRepository(
                 apiClient: TripRequestApiClient(dio: dio))),
+        RepositoryProvider(
+            create: (context) =>
+                WalletRepository(walletApiClient: WalletApiClient(dio: dio)))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -65,6 +71,9 @@ class _MyAppState extends State<MyApp> {
           BlocProvider(
               create: (context) => TripRequestCubit(
                   repository: context.read<TripRequestRepository>())),
+          BlocProvider(
+              create: (context) => WalletCubit(
+                  walletRepository: context.read<WalletRepository>()))
         ],
         child: const AppContent(),
       ),

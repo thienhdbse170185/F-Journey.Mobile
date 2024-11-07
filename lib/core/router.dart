@@ -1,3 +1,5 @@
+import 'package:f_journey/view/wallet/payment_result.dart';
+import 'package:f_journey/view/wallet/wallet.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
 import 'package:f_journey/view/auth/forgot-pw/forgot-pw.dart';
@@ -35,6 +37,8 @@ class RouteName {
   static const String homePassenger = '/passenger';
   static const String createTripRequest = '/create-trip-request';
   static const String homeDriver = '/driver';
+  static const String wallet = '/wallet';
+  static const String payment = '/payment';
 
   static const publicRoutes = [
     auth,
@@ -157,5 +161,14 @@ final router = GoRouter(
           builder: (context, state) => const TripDestinationWidget()),
       GoRoute(
           path: RouteName.homeDriver,
-          builder: (context, state) => const TabsDriverWidget())
+          builder: (context, state) => const TabsDriverWidget()),
+      GoRoute(
+          path: RouteName.wallet,
+          builder: (context, state) => const WalletWidget()),
+      GoRoute(
+          path: RouteName.payment,
+          builder: (context, state) {
+            final uri = state.extra as Uri;
+            return PaymentResultWidget(url: uri);
+          })
     ]);
