@@ -24,4 +24,11 @@ class ApiEndpoints {
 
   // Zone Endpoints
   static const String getZones = "/zones";
+
+  // Trip Request Endpoints
+  static const String createTripRequest = "/triprequests";
+
+  // Wallet Endpoints
+  static const String updateWallet = "/wallet";
+  static const String checkPayment = "/wallet/success";
 }

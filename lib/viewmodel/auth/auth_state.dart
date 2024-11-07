@@ -40,7 +40,10 @@ class CheckNewUserError extends AuthState {
   CheckNewUserError({required this.message});
 }
 
-class ProfileUserApproved extends AuthState {}
+class ProfileUserApproved extends AuthState {
+  final GetUserProfileResult profile;
+  ProfileUserApproved({required this.profile});
+}
 
 class UserDoesNotExist extends AuthState {
   final GetUserProfileResult profile;

@@ -17,7 +17,7 @@ class ZoneBloc extends Bloc<ZoneEvent, ZoneState> {
     emit(GetAllZoneInProgress());
     try {
       final zones = await zoneRepository.getAllZone();
-      emit(GetAllZoneSuccess(zones));
+      emit(GetAllZoneSuccess(zones.result.data));
     } catch (e) {
       emit(GetAllZoneFailure('Failed to get all zone'));
       rethrow;

@@ -1,7 +1,7 @@
 class Wallet {
   final int id;
   final int userId;
-  final double balance;
+  final int balance;
   final String createdAt;
 
   Wallet({
@@ -15,7 +15,7 @@ class Wallet {
     return Wallet(
       id: json['id'],
       userId: json['userId'],
-      balance: json['balance'].toDouble(),
+      balance: json['balance'].toInt(),
       createdAt: json['createdAt'],
     );
   }
