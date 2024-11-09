@@ -36,3 +36,15 @@ final class DeleteTripRequestFailure extends TripRequestState {
 
   DeleteTripRequestFailure(this.message);
 }
+
+final class GetAllTripRequestSuccess extends TripRequestState {
+  final List<TripRequestDto> tripRequests;
+
+  GetAllTripRequestSuccess(this.tripRequests);
+}
+
+final class GetAllTripRequestFailure extends TripRequestState {
+  final String message;
+
+  GetAllTripRequestFailure(this.message);
+}

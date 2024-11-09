@@ -32,4 +32,14 @@ class TripRequestRepository {
       rethrow;
     }
   }
+
+  Future<List<TripRequestDto>> getAllTripRequest() async {
+    try {
+      GetTripRequestByUserIdResponse response =
+          await apiClient.getAllTripRequest();
+      return response.result.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

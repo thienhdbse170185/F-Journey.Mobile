@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:f_journey/core/data/local_datasource.dart';
 import 'package:f_journey/core/utils/reg_util.dart';
 import 'package:f_journey/model/repository/auth/auth_repository.dart';
@@ -31,6 +33,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<RegisterDriverProfileStarted>(
       (event, emit) => _onRegisterDriver(event, emit),
+    );
+    on<LogoutStarted>(
+      (event, emit) => _onLogout(event, emit),
     );
   }
 
@@ -211,6 +216,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (kDebugMode) {
         print('Error while registering: $e');
       }
+    }
+  }
+
+  Future<void> _onLogout(LogoutStarted event, Emitter<AuthState> emit) async {
+    try {
+      await LocalDataSource.deleteAccessToken();
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      emit(LogoutSuccess());
+    } catch (e) {
+      log('Error while logging out: $e');
+      emit(AuthError(message: 'Error while logging out'));
     }
   }
 }

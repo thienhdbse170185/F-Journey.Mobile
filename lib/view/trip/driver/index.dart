@@ -1,10 +1,10 @@
+import 'package:f_journey/core/utils/price_util.dart';
+import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
-import 'package:f_journey/view/message/message.dart';
-import 'package:f_journey/view/notification/notification.dart';
-import 'package:f_journey/view/payment/payment.dart';
 import 'package:f_journey/view/profile/profile.dart';
 import 'package:f_journey/view/trip/driver/home.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
+import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,30 +17,43 @@ class TabsDriverWidget extends StatefulWidget {
 
 class _TabsDriverWidgetState extends State<TabsDriverWidget> {
   int _selectedIndex = 0;
-  late GetUserProfileResult profile;
+  String balance = "0";
+  GetUserProfileResult? profile;
+  List<TripRequestDto> tripRequests = [];
 
   late List<Widget> _widgetOptions;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final state = context.read<AuthBloc>().state;
     if (state is ProfileUserApproved) {
+      final balanceFormated =
+          PriceUtil.formatPrice(state.profile.wallet.balance);
       setState(() {
         profile = state.profile;
+        balance = balanceFormated;
+      });
+    }
+
+    context.read<TripRequestCubit>().getAllTripRequest();
+    final tripRequestState = context.read<TripRequestCubit>().state;
+    if (tripRequestState is GetAllTripRequestSuccess) {
+      setState(() {
+        tripRequests = tripRequestState.tripRequests;
       });
     }
 
     _widgetOptions = <Widget>[
-      const HomeDriverWidget(),
-      const NotificationWidget(),
-      const PaymentWidget(),
-      const MessageWidget(),
+      HomeDriverWidget(
+        userId: profile?.id ?? 0,
+        tripRequests: tripRequests,
+        balance: balance,
+      ),
       ProfileWidget(
-        profileImageUrl: profile.profileImageUrl,
-        name: profile.name,
-        email: profile.email,
+        profileImageUrl: profile?.profileImageUrl ?? '',
+        name: profile?.name ?? 'Tên mặc định',
+        email: profile?.email ?? 'Email mặc định',
       ),
     ];
   }
@@ -69,24 +82,6 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
             label: 'Trang chủ',
           ),
           BottomNavigationBarItem(
-            icon: _selectedIndex == 1
-                ? const Icon(Icons.work_history_rounded)
-                : const Icon(Icons.work_history_outlined),
-            label: 'Hoạt động',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 2
-                ? const Icon(Icons.account_balance_wallet_rounded)
-                : const Icon(Icons.account_balance_wallet_outlined),
-            label: 'Thanh toán',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 3
-                ? const Icon(Icons.message_rounded)
-                : const Icon(Icons.message_outlined),
-            label: 'Tin nhắn',
-          ),
-          BottomNavigationBarItem(
             icon: _selectedIndex == 4
                 ? const Icon(Icons.account_circle_rounded)
                 : const Icon(Icons.account_circle_outlined),
@@ -94,10 +89,9 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Xử lý khi một item được nhấn
-        selectedFontSize: 12, // Điều chỉnh kích thước chữ của item được chọn
-        unselectedFontSize:
-            12, // Điều chỉnh kích thước chữ của item không được chọn
+        onTap: _onItemTapped,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
       ),
     );
   }

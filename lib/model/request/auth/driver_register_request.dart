@@ -12,6 +12,7 @@ class RegisterDriverRequest {
   XFile? profileImage;
   Driver driver;
   Vehicle vehicle;
+
   RegisterDriverRequest({
     required this.name,
     required this.email,
@@ -24,14 +25,15 @@ class RegisterDriverRequest {
 
   factory RegisterDriverRequest.fromJson(Map<String, dynamic> json) {
     return RegisterDriverRequest(
-      name: json['name'],
-      email: json['email'],
-      phoneNumber: json['phoneNumber'],
-      password: json['password'],
-      profileImage:
-          json['profileImage'] != null ? XFile(json['profileImage']) : null,
-      driver: Driver.fromJson(json['driver']),
-      vehicle: Vehicle.fromJson(json['vehicle']),
+      name: json['Name'],
+      email: json['Email'],
+      phoneNumber: json['PhoneNumber'],
+      password: json['Password'],
+      profileImage: json['ProfileImageUrl'] != null
+          ? XFile(json['ProfileImageUrl'])
+          : null,
+      driver: Driver.fromJson(json['Driver']),
+      vehicle: Vehicle.fromJson(json['Vehicle']),
     );
   }
 
@@ -41,11 +43,33 @@ class RegisterDriverRequest {
       'Email': email,
       'PhoneNumber': phoneNumber,
       'Password': password,
-      'ProfileImageUrl': await MultipartFile.fromFile(profileImage!.path,
+      if (profileImage != null)
+        'ProfileImageUrl': await MultipartFile.fromFile(
+          profileImage!.path,
           filename: profileImage!.name,
-          contentType: MediaType('image', 'jpeg')),
-      'Driver': driver.toJson(),
-      'Vehicle': vehicle.toJson(),
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      'Driver.LicenseNumber': driver.licenseNumber,
+      'Driver.Verified': driver.verified.toString(),
+      'Driver.LicenseImageUrl': await MultipartFile.fromFile(
+        driver.licenseImage!.path,
+        filename: driver.licenseImage!.name,
+        contentType: MediaType('image', 'jpeg'),
+      ),
+      'Vehicle.VehicleType': vehicle.vehicleType,
+      'Vehicle.IsVerified': vehicle.isVerified.toString(),
+      'Vehicle.LicensePlate': vehicle.licensePlate,
+      'Vehicle.Registration': vehicle.registration,
+      'Vehicle.RegistrationImageUrl': await MultipartFile.fromFile(
+        vehicle.registrationImage!.path,
+        filename: vehicle.registrationImage!.name,
+        contentType: MediaType('image', 'jpeg'),
+      ),
+      'Vehicle.VehicleImageUrl': await MultipartFile.fromFile(
+        vehicle.vehicleImage!.path,
+        filename: vehicle.vehicleImage!.name,
+        contentType: MediaType('image', 'jpeg'),
+      ),
     };
   }
 }

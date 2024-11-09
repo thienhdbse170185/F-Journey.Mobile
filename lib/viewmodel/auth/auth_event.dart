@@ -43,3 +43,5 @@ class RegisterDriverProfileStarted extends AuthEvent {
   final RegisterDriverRequest request;
   RegisterDriverProfileStarted({required this.request});
 }
+
+class LogoutStarted extends AuthEvent {}

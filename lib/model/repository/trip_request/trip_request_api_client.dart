@@ -40,6 +40,19 @@ class TripRequestApiClient {
     }
   }
 
+  Future<GetTripRequestByUserIdResponse> getAllTripRequest() async {
+    try {
+      final response = await dio.get(ApiEndpoints.getTripRequest);
+      if (response.statusCode == 200) {
+        return GetTripRequestByUserIdResponse.fromJson(response.data);
+      } else {
+        throw Exception('Failed to get trip request');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<bool?> deleteTripRequest(int tripRequestId) async {
     try {
       final response =

@@ -50,4 +50,17 @@ class TripRequestCubit extends Cubit<TripRequestState> {
       emit(DeleteTripRequestFailure(e.toString()));
     }
   }
+
+  void getAllTripRequest() async {
+    emit(GetTripRequestInProgress());
+    try {
+      List<TripRequestDto> tripRequests = await repository.getAllTripRequest();
+      tripRequests = tripRequests
+          .where((tripRequest) => tripRequest.status == 'PENDING')
+          .toList();
+      emit(GetAllTripRequestSuccess(tripRequests));
+    } catch (e) {
+      emit(GetAllTripRequestFailure(e.toString()));
+    }
+  }
 }

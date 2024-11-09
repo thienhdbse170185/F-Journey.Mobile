@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:f_journey/core/network/api_endpoints.dart';
 import 'package:f_journey/model/request/auth/driver_register_request.dart';
@@ -63,7 +65,8 @@ class AuthApiClient {
       } else {
         throw Exception('Failed to register driver');
       }
-    } on DioException {
+    } on DioException catch (e) {
+      log(e.message!);
       rethrow;
     }
   }

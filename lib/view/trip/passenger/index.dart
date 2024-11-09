@@ -53,9 +53,6 @@ class _TabsWidgetState extends State<TabsWidget> {
         userId: profile.id,
         tripRequests: tripRequests,
       ),
-      const NotificationWidget(),
-      const PaymentWidget(),
-      const MessageWidget(),
       ProfileWidget(
         profileImageUrl: profile.profileImageUrl,
         name: profile.name,
@@ -87,24 +84,6 @@ class _TabsWidgetState extends State<TabsWidget> {
                 ? const Icon(Icons.home_rounded)
                 : const Icon(Icons.home_outlined),
             label: 'Trang chủ',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 1
-                ? const Icon(Icons.work_history_rounded)
-                : const Icon(Icons.work_history_outlined),
-            label: 'Hoạt động',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 2
-                ? const Icon(Icons.account_balance_wallet_rounded)
-                : const Icon(Icons.account_balance_wallet_outlined),
-            label: 'Thanh toán',
-          ),
-          BottomNavigationBarItem(
-            icon: _selectedIndex == 3
-                ? const Icon(Icons.message_rounded)
-                : const Icon(Icons.message_outlined),
-            label: 'Tin nhắn',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 4

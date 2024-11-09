@@ -34,4 +34,9 @@ class ApiEndpoints {
   // Wallet Endpoints
   static const String updateWallet = "/wallet";
   static const String checkPayment = "/wallet/success";
+
+  // TripMatch Endpoints
+  static const String getTripMatch = "/tripmatchs";
+  static const String createTripMatch = "/tripmatchs";
+  static const String udpateTripMatch = "/tripmatchs";
 }
