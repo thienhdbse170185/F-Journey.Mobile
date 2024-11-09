@@ -45,7 +45,7 @@ class _PaymentResultWidgetState extends State<PaymentResultWidget> {
                     onPressed: () {
                       context.go(RouteName.homePassenger);
                     },
-                    child: Text('Quay lại trang chủ'))
+                    child: const Text('Quay lại trang chủ'))
               ],
             ),
           ));

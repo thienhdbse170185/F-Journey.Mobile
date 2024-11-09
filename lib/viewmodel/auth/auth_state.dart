@@ -71,3 +71,10 @@ class RegisterDriverProfileError extends AuthState {
 class RegisterDriverProfileSuccess extends AuthState {}
 
 class RegisterDriverProfileInProgress extends AuthState {}
+
+class LogoutSuccess extends AuthState {}
+
+class LogoutFailure extends AuthState {
+  final String message;
+  LogoutFailure({required this.message});
+}

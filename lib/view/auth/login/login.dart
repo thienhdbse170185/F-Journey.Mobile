@@ -1,4 +1,5 @@
 import 'package:f_journey/core/common/widgets/dialog/loading_dialog.dart';
+import 'package:f_journey/core/common/widgets/dialog/success_dialog.dart';
 import 'package:f_journey/core/common/widgets/text_field.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/keyboard_util.dart';
@@ -71,11 +72,23 @@ class _LoginWidgetState extends State<LoginWidget> {
           if (state is AuthInProgress) {
             LoadingDialog.show(context);
           } else if (state is LoginSuccess) {
-            SnackbarUtil.openSuccessSnackbar(context, 'Login success');
-            context.go(RouteName.homeDriver);
-          } else if (state is LoginError) {
+            await Future.delayed(const Duration(milliseconds: 500));
             LoadingDialog.hide(context);
+            await Future.delayed(const Duration(milliseconds: 500));
+            SuccessDialog.show(context);
+            await Future.delayed(const Duration(milliseconds: 2900));
+            SuccessDialog.hide(context);
+            context.read<AuthBloc>().add(GetUserProfileStarted());
+          } else if (state is LoginError) {
             SnackbarUtil.openFailureSnackbar(context, state.message);
+          } else if (state is UserDoesNotExist) {
+            context.go(RouteName.checking, extra: {'profile': state.profile});
+          } else if (state is ProfileUserApproved) {
+            context.go(RouteName.homeDriver);
+          } else if (state is ProfileUserPending) {
+            context.go(RouteName.registerResult);
+          } else if (state is ProfileUserRejected) {
+            context.go(RouteName.registerResult, extra: {'isRejected': true});
           }
         },
         child: SingleChildScrollView(

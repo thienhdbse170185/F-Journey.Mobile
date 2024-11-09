@@ -3,6 +3,8 @@ import 'package:f_journey/core/network/http_client.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/theme/theme.dart';
 import 'package:f_journey/core/theme/util.dart';
+import 'package:f_journey/model/repository/trip_match/trip_match_api_client.dart';
+import 'package:f_journey/model/repository/trip_match/trip_match_repository.dart';
 import 'package:f_journey/model/repository/trip_request/trip_request_api_client.dart';
 import 'package:f_journey/model/repository/trip_request/trip_request_repository.dart';
 import 'package:f_journey/model/repository/wallet/wallet_api_client.dart';
@@ -13,6 +15,7 @@ import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:f_journey/model/repository/auth/auth_api_client.dart';
 import 'package:f_journey/model/repository/auth/auth_repository.dart';
 import 'package:f_journey/firebase_options.dart';
+import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:f_journey/viewmodel/wallet/wallet_cubit.dart';
 import 'package:f_journey/viewmodel/zone/zone_bloc.dart';
@@ -54,7 +57,10 @@ class _MyAppState extends State<MyApp> {
                 apiClient: TripRequestApiClient(dio: dio))),
         RepositoryProvider(
             create: (context) =>
-                WalletRepository(walletApiClient: WalletApiClient(dio: dio)))
+                WalletRepository(walletApiClient: WalletApiClient(dio: dio))),
+        RepositoryProvider(
+            create: (context) => TripMatchRepository(
+                tripMatchApiClient: TripMatchApiClient(dio: dio)))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -73,7 +79,10 @@ class _MyAppState extends State<MyApp> {
                   repository: context.read<TripRequestRepository>())),
           BlocProvider(
               create: (context) => WalletCubit(
-                  walletRepository: context.read<WalletRepository>()))
+                  walletRepository: context.read<WalletRepository>())),
+          BlocProvider(
+              create: (context) => TripMatchCubit(
+                  repository: context.read<TripMatchRepository>()))
         ],
         child: const AppContent(),
       ),

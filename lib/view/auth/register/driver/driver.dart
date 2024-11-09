@@ -199,6 +199,7 @@ class _DriverRegisterWidgetState extends State<DriverRegisterWidget> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is RegisterDriverProfileSuccess) {
+          SnackbarUtil.openSuccessSnackbar(context, 'Đăng ký thành công');
           context.go(RouteName.registerResult);
         } else if (state is RegisterDriverProfileError) {
           SnackbarUtil.openFailureSnackbar(context, state.message);

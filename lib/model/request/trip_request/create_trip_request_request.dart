@@ -38,6 +38,7 @@ class CreateTripRequestRequest {
       'startTime': startTime,
       'slot': slot,
       'status': status,
+      'createdAt': DateTime.now().toIso8601String(),
     };
   }
 }

@@ -1,3 +1,4 @@
+import 'package:f_journey/core/common/widgets/dialog/loading_dialog.dart';
 import 'package:f_journey/core/common/widgets/dialog/success_dialog.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/snackbar_util.dart';
@@ -22,15 +23,16 @@ class _GetStartedWidgetState extends State<GetStartedWidget> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (BuildContext context, state) async {
         if (state is AuthInProgress) {
-          // LoadingDialog.show(context);
+          LoadingDialog.show(context);
         } else if (state is LoginGoogleSuccess) {
-          // LoadingDialog.hide(context);
+          await Future.delayed(const Duration(milliseconds: 2900));
+          LoadingDialog.hide(context);
+          await Future.delayed(const Duration(milliseconds: 500));
           SuccessDialog.show(context);
           await Future.delayed(const Duration(milliseconds: 2900));
           SuccessDialog.hide(context);
           context.read<AuthBloc>().add(GetUserProfileStarted());
         } else if (state is LoginGoogleError) {
-          // LoadingDialog.hide(context);
           SnackbarUtil.openFailureSnackbar(context, state.message);
         } else if (state is UserDoesNotExist) {
           context.go(RouteName.checking, extra: {'profile': state.profile});

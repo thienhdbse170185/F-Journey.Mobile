@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/repository/trip_request/trip_request_repository.dart';
 import 'package:f_journey/model/request/trip_request/create_trip_request_request.dart';
 import 'package:meta/meta.dart';
@@ -16,10 +17,50 @@ class TripRequestCubit extends Cubit<TripRequestState> {
       if (isCreate!) {
         emit(CreateTripRequestSuccess());
       } else {
-        emit(CreateTripRequestFailure('Failed to create trip request'));
+        emit(CreateTripRequestFailure('Đã có lỗi xảy ra khi tạo chuyến'));
       }
     } catch (e) {
       emit(CreateTripRequestFailure(e.toString()));
+    }
+  }
+
+  void getTripRequestByUserId(int userId) async {
+    emit(GetTripRequestInProgress());
+    try {
+      List<TripRequestDto> tripRequests =
+          await repository.getTripRequestByUserId(userId);
+      tripRequests = tripRequests
+          .where((tripRequest) => tripRequest.status == 'PENDING')
+          .toList();
+      emit(GetTripRequestSuccess(tripRequests));
+    } catch (e) {
+      emit(GetTripRequestFailure(e.toString()));
+    }
+  }
+
+  void deleteTripRequest(int tripRequestId) async {
+    try {
+      bool? isDelete = await repository.deleteTripRequest(tripRequestId);
+      if (isDelete!) {
+        emit(DeleteTripRequestSuccess());
+      } else {
+        emit(DeleteTripRequestFailure('Đã có lỗi xảy ra khi xóa chuyến'));
+      }
+    } catch (e) {
+      emit(DeleteTripRequestFailure(e.toString()));
+    }
+  }
+
+  void getAllTripRequest() async {
+    emit(GetTripRequestInProgress());
+    try {
+      List<TripRequestDto> tripRequests = await repository.getAllTripRequest();
+      tripRequests = tripRequests
+          .where((tripRequest) => tripRequest.status == 'PENDING')
+          .toList();
+      emit(GetAllTripRequestSuccess(tripRequests));
+    } catch (e) {
+      emit(GetAllTripRequestFailure(e.toString()));
     }
   }
 }

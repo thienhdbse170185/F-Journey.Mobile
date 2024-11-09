@@ -5,8 +5,10 @@ import 'package:f_journey/view/auth/widgets/components/text_field_required.dart'
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:f_journey/viewmodel/zone/zone_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class TripDestinationWidget extends StatefulWidget {
   const TripDestinationWidget({super.key});
@@ -25,7 +27,8 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
   final TextEditingController tripDateController = TextEditingController();
   final TextEditingController startTimeController = TextEditingController();
 
-  Map<int, String>? zones;
+  Map<int, String>? fromZones;
+  Map<int, String>? toZones;
   Map<int, String> slots = {
     1: "Slot 1",
     2: "Slot 2",
@@ -49,10 +52,11 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
   void submitTripRequest() {
     if (isButtonEnabled) {
       final request = CreateTripRequestRequest(
-        fromZoneId:
-            zones!.entries.firstWhere((entry) => entry.value == fromZone).key,
+        fromZoneId: fromZones!.entries
+            .firstWhere((entry) => entry.value == fromZone)
+            .key,
         toZoneId:
-            zones!.entries.firstWhere((entry) => entry.value == fromZone).key,
+            toZones!.entries.firstWhere((entry) => entry.value == toZone).key,
         tripDate: tripDateController.text,
         startTime: startTimeController.text,
         slot: slots.entries.firstWhere((entry) => entry.value == slot).key,
@@ -113,20 +117,60 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                     );
                   });
             }
+          } else if (state is CreateTripRequestSuccess) {
+            showAdaptiveDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Tạo chuyến thành công"),
+                    content: const Text(
+                        "Bạn vui lòng chờ điện thoại để Xế có thể liên lạc với bạn nhé!"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.pop();
+                        },
+                        child: const Text("Quay về trang chủ"),
+                      ),
+                    ],
+                  );
+                });
+          } else if (state is CreateTripRequestFailure) {
+            SnackbarUtil.openFailureSnackbar(context, state.message);
           }
         }),
         BlocListener<ZoneBloc, ZoneState>(
           listener: (context, state) {
-            if (state is GetAllZoneInProgress) {
-              SnackbarUtil.openSnackbar(context, "Loading zones...");
-            } else if (state is GetAllZoneSuccess) {
+            if (state is GetAllZoneSuccess) {
               setState(() {
-                zones = {for (var zone in state.zones) zone.id: zone.zoneName};
+                fromZones = {
+                  for (var zone in state.zones) zone.id: zone.zoneName
+                };
+                toZones = {
+                  for (var zone in state.zones) zone.id: zone.zoneName
+                };
               });
-              SnackbarUtil.openSuccessSnackbar(
-                  context, "Loaded zones successfully");
             } else if (state is GetAllZoneFailure) {
               SnackbarUtil.openFailureSnackbar(context, "Failed to load zones");
+            } else if (state is FilterZoneSuccess) {
+              if (state.zones.isEmpty) {
+                SnackbarUtil.openFailureSnackbar(
+                    context, "Chưa hỗ trợ tuyến đường này");
+                return;
+              }
+              setState(() {
+                toZones = {
+                  for (var zone in state.zones) zone.id: zone.zoneName
+                };
+              });
+              if (kDebugMode) {
+                print(
+                    "Filtered zones: ${toZones!.entries.map((e) => e.value)}");
+              }
+            } else if (state is FilterZoneFailure) {
+              SnackbarUtil.openFailureSnackbar(
+                  context, "Failed to filter zones");
             }
           },
         ),
@@ -147,7 +191,7 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                   border: OutlineInputBorder(),
                 ),
                 value: fromZone,
-                items: zones?.entries.map((entry) {
+                items: fromZones?.entries.map((entry) {
                   return DropdownMenuItem<String>(
                     value: entry.value,
                     child: Text(entry.value),
@@ -157,6 +201,12 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                   setState(() {
                     fromZone = newValue;
                   });
+                  int fromZoneId = fromZones!.entries
+                      .firstWhere((entry) => entry.value == newValue)
+                      .key;
+                  context
+                      .read<ZoneBloc>()
+                      .add(FilterZoneStarted(fromZoneId: fromZoneId));
                 },
               ),
               const SizedBox(height: 16),
@@ -168,7 +218,7 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                   border: OutlineInputBorder(),
                 ),
                 value: toZone,
-                items: zones?.entries.map((entry) {
+                items: toZones?.entries.map((entry) {
                   return DropdownMenuItem<String>(
                     value: entry.value,
                     child: Text(entry.value),
