@@ -13,8 +13,8 @@ class TripRequestDto {
   final int slot;
   final String status;
   final String createdAt;
-  final String? fromZone;
-  final String? toZone;
+  final String fromZoneName;
+  final String toZoneName;
 
   TripRequestDto({
     required this.id,
@@ -26,8 +26,8 @@ class TripRequestDto {
     required this.slot,
     required this.status,
     required this.createdAt,
-    this.fromZone,
-    this.toZone,
+    required this.fromZoneName,
+    required this.toZoneName,
   });
 
   factory TripRequestDto.fromJson(Map<String, dynamic> json) =>

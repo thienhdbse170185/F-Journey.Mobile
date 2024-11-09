@@ -17,8 +17,8 @@ TripRequestDto _$TripRequestDtoFromJson(Map<String, dynamic> json) =>
       slot: (json['slot'] as num).toInt(),
       status: json['status'] as String,
       createdAt: json['createdAt'] as String,
-      fromZone: json['fromZone'] as String?,
-      toZone: json['toZone'] as String?,
+      fromZoneName: json['fromZoneName'] as String,
+      toZoneName: json['toZoneName'] as String,
     );
 
 Map<String, dynamic> _$TripRequestDtoToJson(TripRequestDto instance) =>
@@ -32,6 +32,6 @@ Map<String, dynamic> _$TripRequestDtoToJson(TripRequestDto instance) =>
       'slot': instance.slot,
       'status': instance.status,
       'createdAt': instance.createdAt,
-      'fromZone': instance.fromZone,
-      'toZone': instance.toZone,
+      'fromZoneName': instance.fromZoneName,
+      'toZoneName': instance.toZoneName,
     };

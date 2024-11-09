@@ -89,8 +89,8 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Xác nhận xóa chuyến đi'),
-          content: const Text('Bạn có chắc chắn muốn xóa chuyến đi này không?'),
+          title: const Text('Xác nhận xóa đơn'),
+          content: const Text('Bạn có chắc chắn muốn xóa đơn này không?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -263,7 +263,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    "Danh sách đơn tạo chuyến",
+                    "Đang chờ Xế xác nhận",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Expanded(
@@ -276,16 +276,16 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             child: ListTile(
                               title: Text(
-                                "To: ${tripRequest.toZoneId}",
+                                "Trip: ${tripRequest.fromZoneName} - ${tripRequest.toZoneName}",
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
-                              subtitle: Text("From: ${tripRequest.fromZoneId}"),
-                              trailing: IconButton(
-                                onPressed: () {
-                                  _showConfirmDeleteDialog(tripRequest.id);
-                                },
-                                icon: const Icon(Icons.cancel_outlined),
-                              ),
+                              subtitle: Text(
+                                  "When: ${tripRequest.tripDate} - ${tripRequest.startTime}"),
+                              trailing: OutlinedButton(
+                                  onPressed: () {
+                                    _showConfirmDeleteDialog(tripRequest.id);
+                                  },
+                                  child: const Text('Hủy chuyến')),
                             ));
                       },
                     ),

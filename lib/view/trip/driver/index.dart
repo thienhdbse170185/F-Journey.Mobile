@@ -1,9 +1,12 @@
+import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
 import 'package:f_journey/view/message/message.dart';
 import 'package:f_journey/view/notification/notification.dart';
 import 'package:f_journey/view/payment/payment.dart';
-import 'package:f_journey/view/trip/driver/home.dart';
 import 'package:f_journey/view/profile/profile.dart';
+import 'package:f_journey/view/trip/driver/home.dart';
+import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TabsDriverWidget extends StatefulWidget {
   const TabsDriverWidget({super.key});
@@ -14,14 +17,33 @@ class TabsDriverWidget extends StatefulWidget {
 
 class _TabsDriverWidgetState extends State<TabsDriverWidget> {
   int _selectedIndex = 0;
+  late GetUserProfileResult profile;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeDriverWidget(),
-    NotificationWidget(),
-    PaymentWidget(),
-    MessageWidget(),
-    ProfileWidget(),
-  ];
+  late List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final state = context.read<AuthBloc>().state;
+    if (state is ProfileUserApproved) {
+      setState(() {
+        profile = state.profile;
+      });
+    }
+
+    _widgetOptions = <Widget>[
+      const HomeDriverWidget(),
+      const NotificationWidget(),
+      const PaymentWidget(),
+      const MessageWidget(),
+      ProfileWidget(
+        profileImageUrl: profile.profileImageUrl,
+        name: profile.name,
+        email: profile.email,
+      ),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
