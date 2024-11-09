@@ -1,10 +1,12 @@
 import 'package:f_journey/core/utils/price_util.dart';
+import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/view/message/message.dart';
 import 'package:f_journey/view/notification/notification.dart';
 import 'package:f_journey/view/payment/payment.dart';
 import 'package:f_journey/view/trip/passenger/home.dart';
 import 'package:f_journey/view/profile/profile.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
+import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +20,8 @@ class TabsWidget extends StatefulWidget {
 class _TabsWidgetState extends State<TabsWidget> {
   int _selectedIndex = 0;
   String balance = "0";
+  int userId = 0;
+  List<TripRequestDto> tripRequests = [];
 
   late List<Widget> _widgetOptions;
 
@@ -29,13 +33,24 @@ class _TabsWidgetState extends State<TabsWidget> {
       final balanceFormated =
           PriceUtil.formatPrice(state.profile.wallet.balance);
       setState(() {
+        userId = state.profile.id;
         balance = balanceFormated;
+      });
+    }
+
+    context.read<TripRequestCubit>().getTripRequestByUserId(userId);
+    final tripRequestState = context.read<TripRequestCubit>().state;
+    if (tripRequestState is GetTripRequestSuccess) {
+      setState(() {
+        tripRequests = tripRequestState.tripRequests;
       });
     }
 
     _widgetOptions = <Widget>[
       HomePassengerWidget(
         balance: balance,
+        userId: userId,
+        tripRequests: tripRequests,
       ),
       const NotificationWidget(),
       const PaymentWidget(),

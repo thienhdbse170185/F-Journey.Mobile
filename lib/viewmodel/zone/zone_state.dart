@@ -18,3 +18,15 @@ final class GetAllZoneFailure extends ZoneState {
 
   GetAllZoneFailure(this.message);
 }
+
+final class FilterZoneSuccess extends ZoneState {
+  final List<ZoneDto> zones;
+
+  FilterZoneSuccess(this.zones);
+}
+
+final class FilterZoneFailure extends ZoneState {
+  final String message;
+
+  FilterZoneFailure(this.message);
+}
