@@ -7,7 +7,7 @@ class DriverDto {
   String name;
   String email;
   String profileImageUrl;
-  String liceseNumber;
+  String licenseNumber;
   String licenseImageUrl;
   String licensePlate;
   String vehicleImageUrl;
@@ -16,7 +16,7 @@ class DriverDto {
     required this.name,
     required this.email,
     required this.profileImageUrl,
-    required this.liceseNumber,
+    required this.licenseNumber,
     required this.licenseImageUrl,
     required this.licensePlate,
     required this.vehicleImageUrl,

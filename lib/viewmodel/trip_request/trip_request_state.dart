@@ -48,3 +48,5 @@ final class GetAllTripRequestFailure extends TripRequestState {
 
   GetAllTripRequestFailure(this.message);
 }
+
+final class TripRequestIsEmpty extends TripRequestState {}

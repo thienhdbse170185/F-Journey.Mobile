@@ -33,10 +33,11 @@ class TripMatchRepository {
     }
   }
 
-  Future<bool> updateTripMatchStatus(int tripMatchId, String status) async {
+  Future<bool> updateTripMatchStatus(int tripMatchId, String status,
+      int? reasonId, bool isTripMatchUpdate) async {
     try {
       return await tripMatchApiClient.updateTripMatchStatus(
-          tripMatchId, status);
+          tripMatchId, status, reasonId, isTripMatchUpdate);
     } catch (e) {
       rethrow;
     }

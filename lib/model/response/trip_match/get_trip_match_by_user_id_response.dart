@@ -5,7 +5,7 @@ part 'get_trip_match_by_user_id_response.g.dart';
 
 @JsonSerializable()
 class GetTripMatchByUserIdResponse {
-  String success;
+  bool success;
   GetTripMatchByUserIdResult result;
 
   GetTripMatchByUserIdResponse({required this.success, required this.result});

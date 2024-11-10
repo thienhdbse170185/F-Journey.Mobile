@@ -34,23 +34,47 @@ class TripMatchCubit extends Cubit<TripMatchState> {
   }
 
   void getTripMatchByPassengerId(int passengerId) async {
+    emit(GetTripMatchByPassengerIdInProgress());
     try {
       GetTripMatchByUserIdResult tripMatches =
           await repository.getAllTripMatch();
-      List<TripMatchDto> passengerTripMatches = tripMatches.data;
-      passengerTripMatches
-          .where((element) => element.tripRequest.userId == passengerId)
+      List<TripMatchDto> pendingTripMatches = tripMatches.data
+          .where((element) => element.status == 'Pending')
           .toList();
-      emit(GetTripMatchByPassengerIdSuccess(passengerTripMatches));
+      List<TripMatchDto> acceptedTripMatches = tripMatches.data
+          .where((element) => element.status == 'Accepted')
+          .toList();
+      List<TripMatchDto> canceledTripMatches = tripMatches.data
+          .where((element) => element.status == 'Canceled')
+          .toList();
+      List<TripMatchDto> completedTripMatches = tripMatches.data
+          .where((element) => element.status == 'Completed')
+          .toList();
+      List<TripMatchDto> inProgressTripMatches = tripMatches.data
+          .where((element) => element.status == 'InProgress')
+          .toList();
+      List<TripMatchDto> rejectedTripMatches = tripMatches.data
+          .where((element) => element.status == 'Rejected')
+          .toList();
+
+      emit(GetTripMatchByPassengerIdSuccess(
+          pendingTripMatches,
+          acceptedTripMatches,
+          canceledTripMatches,
+          completedTripMatches,
+          inProgressTripMatches,
+          rejectedTripMatches));
     } catch (e) {
       emit(GetTripMatchByPassengerIdFailure(e.toString()));
     }
   }
 
-  void updateTripMatchStatus(int tripMatchId, String status) async {
+  void updateTripMatchStatus(int tripMatchId, String status, int? reasonId,
+      bool isTripMatchUpdate) async {
+    emit(UpdateTripMatchStatusInProgress());
     try {
-      bool isUpdate =
-          await repository.updateTripMatchStatus(tripMatchId, status);
+      bool isUpdate = await repository.updateTripMatchStatus(
+          tripMatchId, status, reasonId, isTripMatchUpdate);
       if (isUpdate) {
         emit(UpdateTripMatchStatusSuccess());
       } else {

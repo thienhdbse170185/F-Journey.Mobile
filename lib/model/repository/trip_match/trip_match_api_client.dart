@@ -62,11 +62,14 @@ class TripMatchApiClient {
     }
   }
 
-  Future<bool> updateTripMatchStatus(int tripMatchId, String status) async {
+  Future<bool> updateTripMatchStatus(int tripMatchId, String status,
+      int? reasonId, bool isTripMatchUpdate) async {
     try {
       final response = await dio
           .put("${ApiEndpoints.udpateTripMatch}/$tripMatchId/status", data: {
         "status": status,
+        "reasonId": reasonId,
+        "isTripMatchUpdate": isTripMatchUpdate
       });
       if (response.statusCode == 200) {
         return true;

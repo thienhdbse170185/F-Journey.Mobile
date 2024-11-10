@@ -9,7 +9,7 @@ part of 'get_trip_match_by_user_id_response.dart';
 GetTripMatchByUserIdResponse _$GetTripMatchByUserIdResponseFromJson(
         Map<String, dynamic> json) =>
     GetTripMatchByUserIdResponse(
-      success: json['success'] as String,
+      success: json['success'] as bool,
       result: GetTripMatchByUserIdResult.fromJson(
           json['result'] as Map<String, dynamic>),
     );
@@ -28,7 +28,7 @@ GetTripMatchByUserIdResult _$GetTripMatchByUserIdResultFromJson(
       pageSize: (json['pageSize'] as num).toInt(),
       totalItems: (json['totalItems'] as num).toInt(),
       totalPages: (json['totalPages'] as num).toInt(),
-      data: (json['items'] as List<dynamic>)
+      data: (json['data'] as List<dynamic>)
           .map((e) => TripMatchDto.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -40,5 +40,5 @@ Map<String, dynamic> _$GetTripMatchByUserIdResultToJson(
       'pageSize': instance.pageSize,
       'totalItems': instance.totalItems,
       'totalPages': instance.totalPages,
-      'items': instance.data,
+      'data': instance.data,
     };

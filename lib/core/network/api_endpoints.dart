@@ -39,4 +39,7 @@ class ApiEndpoints {
   static const String getTripMatch = "/tripmatchs";
   static const String createTripMatch = "/tripmatchs";
   static const String udpateTripMatch = "/tripmatchs";
+
+  // Reason Endpoints
+  static const String getReasons = "/cancellationreasons";
 }

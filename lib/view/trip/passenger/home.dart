@@ -1,3 +1,4 @@
+import 'package:f_journey/core/common/widgets/dialog/loading_dialog.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/price_util.dart';
 import 'package:f_journey/core/utils/snackbar_util.dart';
@@ -15,11 +16,13 @@ class HomePassengerWidget extends StatefulWidget {
   final String balance;
   final int userId;
   final List<TripRequestDto> tripRequests;
+  final List<TripMatchDto> tripMatches;
   const HomePassengerWidget(
       {super.key,
       required this.balance,
       required this.userId,
-      required this.tripRequests});
+      required this.tripRequests,
+      required this.tripMatches});
 
   @override
   State<HomePassengerWidget> createState() => _HomePassengerWidgetState();
@@ -40,6 +43,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
     setState(() {
       updatedBalance = widget.balance;
       updatedTripRequests = widget.tripRequests;
+      updatedTripMatches = widget.tripMatches;
     }); // Initialize with the provided balance
 
     _animationController =
@@ -62,6 +66,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
   Future<void> _refreshUserProfile() async {
     context.read<AuthBloc>().add(GetUserProfileStarted());
     context.read<TripRequestCubit>().getTripRequestByUserId(widget.userId);
+    context.read<TripMatchCubit>().getTripMatchByPassengerId(widget.userId);
   }
 
   // Function to show dialog for adding funds
@@ -179,20 +184,12 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
         ),
         BlocListener<TripRequestCubit, TripRequestState>(
           listener: (context, state) {
-            if (state is GetTripRequestFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            } else if (state is GetTripRequestSuccess) {
-              setState(() {
-                updatedTripRequests = state.tripRequests;
-              });
-            } else if (state is DeleteTripRequestSuccess) {
+            if (state is DeleteTripRequestSuccess) {
               context
                   .read<TripRequestCubit>()
                   .getTripRequestByUserId(widget.userId);
               SnackbarUtil.openSuccessSnackbar(
-                  context, 'Xóa chuyến đi thành công');
+                  context, 'Hủy yêu cầu thành công');
             } else if (state is DeleteTripRequestFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
@@ -200,6 +197,24 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
             }
           },
         ),
+        BlocListener<TripMatchCubit, TripMatchState>(
+            listener: (context, state) async {
+          if (state is UpdateTripMatchStatusInProgress) {
+            LoadingDialog.show(context);
+          } else if (state is UpdateTripMatchStatusSuccess) {
+            LoadingDialog.hide(context);
+            SnackbarUtil.openSuccessSnackbar(
+                context, 'Cập nhật trạng thái thành công');
+            context
+                .read<TripMatchCubit>()
+                .getTripMatchByPassengerId(widget.userId);
+          } else if (state is UpdateTripMatchStatusFailure) {
+            LoadingDialog.hide(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        })
       ],
       child: Scaffold(
         appBar: const HomeAppBar(),
@@ -305,146 +320,239 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                   ],
                 ),
                 const SizedBox(height: 32),
-                Row(
-                  children: [
-                    // Stack để chứa cả hiệu ứng ping và icon thông báo
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Vòng tròn mờ mở rộng từ trung tâm icon
-                        AnimatedBuilder(
-                          animation: _animationController,
-                          builder: (context, child) {
-                            return Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.redAccent.withOpacity(
-                                    1 - _animationController.value,
+                BlocBuilder<TripMatchCubit, TripMatchState>(
+                    builder: (context, state) {
+                  if (state is GetTripMatchByPassengerIdSuccess) {
+                    if (state.pendingTripMatches.isNotEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              // Stack để chứa cả hiệu ứng ping và icon thông báo
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // Vòng tròn mờ mở rộng từ trung tâm icon
+                                  AnimatedBuilder(
+                                    animation: _animationController,
+                                    builder: (context, child) {
+                                      return Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.redAccent.withOpacity(
+                                              1 - _animationController.value,
+                                            ),
+                                          ),
+                                          transform: Matrix4.identity()
+                                            ..scale(_scaleAnimation.value),
+                                        ),
+                                      );
+                                    },
                                   ),
+                                  // Icon thông báo
+                                  const Icon(Icons.notifications_on_outlined,
+                                      color: Colors.redAccent),
+                                ],
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Bạn có Xế chờ ghép cặp!',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.255,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.pendingTripMatches.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final tripMatch =
+                                    state.pendingTripMatches[index];
+                                return GestureDetector(
+                                    onTap: () {
+                                      // Handle card tap event
+                                      context.push(RouteName.tripMatchDetail,
+                                          extra: tripMatch);
+                                    },
+                                    child: Card(
+                                      elevation: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'From: ${tripMatch.tripRequest.fromZoneName}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium,
+                                                  ),
+                                                  Text(
+                                                    'To: ${tripMatch.tripRequest.toZoneName}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium,
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    'When: ${tripMatch.tripRequest.tripDate} | Slot: ${tripMatch.tripRequest.slot}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                OutlinedButton(
+                                                    onPressed: () {
+                                                      _showConfirmDialog(
+                                                          'Xác nhận hủy',
+                                                          'Bạn xác nhận từ chối ghép cặp với bạn Xế này?',
+                                                          () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        context
+                                                            .read<
+                                                                TripMatchCubit>()
+                                                            .updateTripMatchStatus(
+                                                                tripMatch.id,
+                                                                'Rejected',
+                                                                null,
+                                                                true);
+                                                      });
+                                                    },
+                                                    child:
+                                                        const Text('Từ chối')),
+                                                const SizedBox(width: 8),
+                                                FilledButton(
+                                                  onPressed: () {
+                                                    context
+                                                        .read<TripMatchCubit>()
+                                                        .updateTripMatchStatus(
+                                                            tripMatch.id,
+                                                            'Accepted',
+                                                            null,
+                                                            true);
+                                                  },
+                                                  child: const Text('Ghép cặp'),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ));
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 48),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  } else if (state is GetTripMatchByPassengerIdFailure) {
+                    return Text(state.message);
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                }),
+                BlocBuilder<TripRequestCubit, TripRequestState>(
+                    builder: (context, state) {
+                  if (state is GetTripRequestSuccess) {
+                    return Column(
+                      children: [
+                        Text("Danh sách yêu cầu chuyến đi của bạn",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryFixed)),
+                        const SizedBox(height: 8),
+                        ListView.builder(
+                          itemCount: state.tripRequests.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final tripRequest = state.tripRequests[index];
+                            return Card(
+                              elevation: 2,
+                              margin: const EdgeInsets.all(16),
+                              child: ListTile(
+                                title: Text(
+                                  "${tripRequest.fromZoneName} - ${tripRequest.toZoneName}",
+                                  style: Theme.of(context).textTheme.titleSmall,
                                 ),
-                                transform: Matrix4.identity()
-                                  ..scale(_scaleAnimation.value),
+                                subtitle: Text(
+                                    "When: ${tripRequest.tripDate} | Slot: ${tripRequest.slot}"),
+                                trailing: OutlinedButton(
+                                  onPressed: () {
+                                    _showConfirmDeleteDialog(tripRequest.id);
+                                  },
+                                  child: const Text('Hủy yêu cầu'),
+                                ),
                               ),
                             );
                           },
                         ),
-                        // Icon thông báo
-                        const Icon(Icons.notifications_on_outlined,
-                            color: Colors.redAccent),
                       ],
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Bạn có Xế chờ ghép cặp!',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.255,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: updatedTripRequests.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final tripRequest = updatedTripRequests[index];
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'From: ${tripRequest.fromZoneName}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    Text(
-                                      'To: ${tripRequest.toZoneName}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'When: ${tripRequest.tripDate} | Slot: ${tripRequest.slot}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  OutlinedButton(
-                                      onPressed: () {},
-                                      child: const Text('Từ chối')),
-                                  const SizedBox(width: 8),
-                                  FilledButton(
-                                    onPressed: () {
-                                      _showConfirmDialog("Xác nhận",
-                                          "Bạn xác nhận muốn ghép cặp với bạn Ôm này?",
-                                          () {
-                                        Navigator.of(context).pop();
-                                        context
-                                            .read<TripMatchCubit>()
-                                            .createTripMatch(tripRequest.id);
-                                      });
-                                    },
-                                    child: const Text('Ghép cặp'),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 48),
-                Text("Danh sách yêu cầu chuyến đi",
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primaryFixed)),
-                const SizedBox(height: 8),
-                Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: updatedTripRequests.length,
-                      itemBuilder: (context, index) {
-                        final tripRequest = updatedTripRequests[index];
-                        return Card(
-                            elevation: 2,
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            child: ListTile(
-                              title: Text(
-                                "${tripRequest.fromZoneName} - ${tripRequest.toZoneName}",
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                              subtitle: Text(
-                                  "When: ${tripRequest.tripDate} - ${tripRequest.startTime}"),
-                              trailing: OutlinedButton(
-                                  onPressed: () {
-                                    _showConfirmDeleteDialog(tripRequest.id);
-                                  },
-                                  child: const Text('Hủy yêu cầu')),
-                            ));
-                      },
-                    )
-                  ],
-                ),
+                    );
+                  } else if (state is GetTripRequestFailure) {
+                    return Text(state.message);
+                  } else if (state is TripRequestIsEmpty) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 32),
+                            Image.asset(
+                              'assets/images/checking_image.png',
+                              width: 260,
+                            ),
+                            const SizedBox(height: 32),
+                            Text('Hi!',
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Hãy tạo chuyến đi để bắt đầu \nchuyến hành trình của bạn!',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline),
+                              textAlign: TextAlign.center,
+                            ),
+                          ]),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                }),
               ],
             ),
           ),
