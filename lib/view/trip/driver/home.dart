@@ -122,115 +122,156 @@ class _HomeDriverWidgetState extends State<HomeDriverWidget>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    // Stack để chứa cả hiệu ứng ping và icon thông báo
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Vòng tròn mờ mở rộng từ trung tâm icon
-                        AnimatedBuilder(
-                          animation: _animationController,
-                          builder: (context, child) {
-                            return Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.redAccent.withOpacity(
-                                    1 - _animationController.value,
-                                  ),
-                                ),
-                                transform: Matrix4.identity()
-                                  ..scale(_scaleAnimation.value),
-                              ),
-                            );
-                          },
-                        ),
-                        // Icon thông báo
-                        const Icon(Icons.notifications_on_outlined,
-                            color: Colors.redAccent),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Có bạn Ôm xin đi nhờ nè!',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: updatedTripRequests.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final tripRequest = updatedTripRequests[index];
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Check if there are any trip requests
+                updatedTripRequests.isEmpty
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.5,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'From: ${tripRequest.fromZoneName}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    Text(
-                                      'To: ${tripRequest.toZoneName}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'When: ${tripRequest.tripDate}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Slot: ${tripRequest.slot}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    )
-                                  ],
-                                ),
+                              const SizedBox(height: 32),
+                              Image.asset(
+                                'assets/images/checking_image.png',
+                                width: 260,
                               ),
-                              FilledButton(
-                                onPressed: () {
-                                  _showConfirmDialog("Xác nhận",
-                                      "Bạn xác nhận muốn ghép cặp với bạn Ôm này?",
-                                      () {
-                                    Navigator.of(context).pop();
-                                    context
-                                        .read<TripMatchCubit>()
-                                        .createTripMatch(tripRequest.id);
-                                  });
-                                },
-                                child: const Text('Ghép cặp'),
+                              const SizedBox(height: 32),
+                              Text('Hi!',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Có vẻ như chưa có \nbạn Ôm nào xin đi nhờ ><',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline),
+                                textAlign: TextAlign.center,
+                              ),
+                            ]),
+                      )
+                    : Column(
+                        children: [
+                          Row(
+                            children: [
+                              // Stack to display ping effect and notification icon
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  // Animated ping effect
+                                  AnimatedBuilder(
+                                    animation: _animationController,
+                                    builder: (context, child) {
+                                      return Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.redAccent.withOpacity(
+                                              1 - _animationController.value,
+                                            ),
+                                          ),
+                                          transform: Matrix4.identity()
+                                            ..scale(_scaleAnimation.value),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  // Notification icon
+                                  const Icon(Icons.notifications_on_outlined,
+                                      color: Colors.redAccent),
+                                ],
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Có bạn Ôm xin đi nhờ nè!',
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: updatedTripRequests.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final tripRequest = updatedTripRequests[index];
+                                return Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'From: ${tripRequest.fromZoneName}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium,
+                                              ),
+                                              Text(
+                                                'To: ${tripRequest.toZoneName}',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium,
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'When: ${tripRequest.tripDate}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium,
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'Slot: ${tripRequest.slot}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        FilledButton(
+                                          onPressed: () {
+                                            _showConfirmDialog("Xác nhận",
+                                                "Bạn xác nhận muốn ghép cặp với bạn Ôm này?",
+                                                () {
+                                              Navigator.of(context).pop();
+                                              context
+                                                  .read<TripMatchCubit>()
+                                                  .createTripMatch(
+                                                      tripRequest.id);
+                                            });
+                                          },
+                                          child: const Text('Ghép cặp'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),
