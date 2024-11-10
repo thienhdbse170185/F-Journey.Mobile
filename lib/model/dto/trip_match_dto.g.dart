@@ -8,6 +8,7 @@ part of 'trip_match_dto.dart';
 
 TripMatchDto _$TripMatchDtoFromJson(Map<String, dynamic> json) => TripMatchDto(
       id: (json['id'] as num).toInt(),
+      tripRequestId: (json['tripRequestId'] as num).toInt(),
       driverId: (json['driverId'] as num).toInt(),
       matchedAt: json['matchedAt'] as String,
       status: json['status'] as String,
@@ -19,6 +20,7 @@ TripMatchDto _$TripMatchDtoFromJson(Map<String, dynamic> json) => TripMatchDto(
 Map<String, dynamic> _$TripMatchDtoToJson(TripMatchDto instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'tripRequestId': instance.tripRequestId,
       'driverId': instance.driverId,
       'matchedAt': instance.matchedAt,
       'status': instance.status,

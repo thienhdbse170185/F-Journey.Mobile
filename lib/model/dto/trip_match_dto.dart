@@ -7,6 +7,7 @@ part 'trip_match_dto.g.dart';
 @JsonSerializable()
 class TripMatchDto {
   int id;
+  int tripRequestId;
   int driverId;
   String matchedAt;
   String status;
@@ -15,6 +16,7 @@ class TripMatchDto {
 
   TripMatchDto(
       {required this.id,
+      required this.tripRequestId,
       required this.driverId,
       required this.matchedAt,
       required this.status,

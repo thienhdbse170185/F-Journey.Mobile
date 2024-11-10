@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:f_journey/core/network/api_endpoints.dart';
+import 'package:f_journey/model/response/trip_match/get_trip_match_by_user_id_response.dart';
 
 class TripMatchApiClient {
   final Dio dio;
@@ -14,6 +15,63 @@ class TripMatchApiClient {
         return true;
       } else {
         throw Exception('Failed to create trip match');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data['result'] != null) {
+        throw Exception(e.response?.data['result']);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<GetTripMatchByUserIdResponse> getTripMatchByUserId(int userId) async {
+    try {
+      final response =
+          await dio.get(ApiEndpoints.getTripMatch, queryParameters: {
+        "userId": userId,
+      });
+      if (response.statusCode == 200) {
+        return GetTripMatchByUserIdResponse.fromJson(response.data);
+      } else {
+        throw Exception('Failed to get trip match by user id');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data['result'] != null) {
+        throw Exception(e.response?.data['result']);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<GetTripMatchByUserIdResponse> getAllTripMatch() async {
+    try {
+      final response = await dio.get(ApiEndpoints.getTripMatch);
+      if (response.statusCode == 200) {
+        return GetTripMatchByUserIdResponse.fromJson(response.data);
+      } else {
+        throw Exception('Failed to get all trip match');
+      }
+    } on DioException catch (e) {
+      if (e.response?.data['result'] != null) {
+        throw Exception(e.response?.data['result']);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<bool> updateTripMatchStatus(int tripMatchId, String status) async {
+    try {
+      final response = await dio
+          .put("${ApiEndpoints.udpateTripMatch}/$tripMatchId/status", data: {
+        "status": status,
+      });
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to update trip match status');
       }
     } on DioException catch (e) {
       if (e.response?.data['result'] != null) {
