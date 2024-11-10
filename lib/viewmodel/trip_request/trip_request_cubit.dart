@@ -32,6 +32,10 @@ class TripRequestCubit extends Cubit<TripRequestState> {
       tripRequests = tripRequests
           .where((tripRequest) => tripRequest.status == 'PENDING')
           .toList();
+      if (tripRequests.isEmpty) {
+        emit(TripRequestIsEmpty());
+        return;
+      }
       emit(GetTripRequestSuccess(tripRequests));
     } catch (e) {
       emit(GetTripRequestFailure(e.toString()));
@@ -58,6 +62,10 @@ class TripRequestCubit extends Cubit<TripRequestState> {
       tripRequests = tripRequests
           .where((tripRequest) => tripRequest.status == 'PENDING')
           .toList();
+      if (tripRequests.isEmpty) {
+        emit(TripRequestIsEmpty());
+        return;
+      }
       emit(GetAllTripRequestSuccess(tripRequests));
     } catch (e) {
       emit(GetAllTripRequestFailure(e.toString()));

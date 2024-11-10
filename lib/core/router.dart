@@ -1,3 +1,5 @@
+import 'package:f_journey/model/dto/trip_match_dto.dart';
+import 'package:f_journey/view/trip/passenger/trip_match_detail.dart';
 import 'package:f_journey/view/wallet/payment_result.dart';
 import 'package:f_journey/view/wallet/wallet.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
@@ -39,6 +41,7 @@ class RouteName {
   static const String homeDriver = '/driver';
   static const String wallet = '/wallet';
   static const String payment = '/payment';
+  static const String tripMatchDetail = '/trip-match-detail';
 
   static const publicRoutes = [
     auth,
@@ -170,5 +173,13 @@ final router = GoRouter(
           builder: (context, state) {
             final uri = state.extra as Uri;
             return PaymentResultWidget(url: uri);
+          }),
+      GoRoute(
+          path: RouteName.tripMatchDetail,
+          builder: (context, state) {
+            final tripMatch = state.extra as TripMatchDto;
+            return TripMatchDetailWidget(
+              tripMatch: tripMatch,
+            );
           })
     ]);

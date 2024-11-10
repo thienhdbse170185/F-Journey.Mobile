@@ -34,4 +34,16 @@ class TripRequestDto {
       _$TripRequestDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$TripRequestDtoToJson(this);
+
+  Map<String, dynamic> toJsonForTripMatch() {
+    return {
+      'userId': userId,
+      "fromZoneId": fromZoneId,
+      'toZoneId': toZoneId,
+      'fromZoneName': fromZoneName,
+      'toZoneName': toZoneName,
+      'tripDate': tripDate,
+      'startTime': startTime,
+    };
+  }
 }

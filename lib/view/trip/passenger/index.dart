@@ -1,12 +1,11 @@
 import 'package:f_journey/core/utils/price_util.dart';
+import 'package:f_journey/model/dto/trip_match_dto.dart';
 import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
-import 'package:f_journey/view/message/message.dart';
-import 'package:f_journey/view/notification/notification.dart';
-import 'package:f_journey/view/payment/payment.dart';
 import 'package:f_journey/view/trip/passenger/home.dart';
 import 'package:f_journey/view/profile/profile.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
+import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +22,7 @@ class _TabsWidgetState extends State<TabsWidget> {
   String balance = "0";
   late GetUserProfileResult profile;
   List<TripRequestDto> tripRequests = [];
+  List<TripMatchDto> tripMatches = [];
 
   late List<Widget> _widgetOptions;
 
@@ -47,11 +47,20 @@ class _TabsWidgetState extends State<TabsWidget> {
       });
     }
 
+    context.read<TripMatchCubit>().getTripMatchByPassengerId(profile.id);
+    final tripMatchState = context.read<TripMatchCubit>().state;
+    if (tripMatchState is GetTripMatchByPassengerIdSuccess) {
+      setState(() {
+        tripMatches = tripMatchState.pendingTripMatches;
+      });
+    }
+
     _widgetOptions = <Widget>[
       HomePassengerWidget(
         balance: balance,
         userId: profile.id,
         tripRequests: tripRequests,
+        tripMatches: tripMatches,
       ),
       ProfileWidget(
         profileImageUrl: profile.profileImageUrl,
