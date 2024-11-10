@@ -8,11 +8,13 @@ class ProfileWidget extends StatefulWidget {
   final String profileImageUrl;
   final String name;
   final String email;
+  final int userId;
   const ProfileWidget(
       {super.key,
       required this.profileImageUrl,
       required this.name,
-      required this.email});
+      required this.email,
+      required this.userId});
 
   @override
   State<ProfileWidget> createState() => _ProfileWidgetState();
@@ -61,6 +63,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 ),
               ),
               const SizedBox(height: 24),
+              // Your Trip Action Menu
+              ListTile(
+                leading: const Icon(Icons.travel_explore),
+                title: const Text('Chuyến đi của bạn'),
+                onTap: () {
+                  // Navigate to the trip details screen
+                  context.push(RouteName.tripHistory, extra: widget.userId);
+                },
+              ),
+              // Logout Action Menu
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text('Đăng xuất'),

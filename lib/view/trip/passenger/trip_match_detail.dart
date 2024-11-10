@@ -186,13 +186,38 @@ class _TripMatchDetailWidgetState extends State<TripMatchDetailWidget> {
                 ),
               ),
               const SizedBox(height: 32),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: OutlinedButton(
-                  onPressed: _showCancellationDialog,
-                  child: const Text('Hủy chuyến đi'),
-                ),
-              ),
+              if (widget.tripMatch.status == 'Pending')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: OutlinedButton(
+                    onPressed: _showCancellationDialog,
+                    child: const Text('Hủy chuyến đi'),
+                  ),
+                )
+              else if (widget.tripMatch.status == 'Completed')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: const FilledButton(
+                      onPressed: null, child: Text('Chuyến này đã hoàn thành')),
+                )
+              else if (widget.tripMatch.status == 'Canceled')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: const FilledButton(
+                      onPressed: null, child: Text('Chuyến này đã bị hủy')),
+                )
+              else if (widget.tripMatch.status == 'InProgress')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: const FilledButton(
+                      onPressed: null, child: Text('Chuyến này đang diễn ra')),
+                )
+              else if (widget.tripMatch.status == 'Rejected')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: const FilledButton(
+                      onPressed: null, child: Text('Chuyến này đã bị từ chối')),
+                )
             ],
           ),
         ),

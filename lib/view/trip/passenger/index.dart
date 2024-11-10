@@ -66,6 +66,7 @@ class _TabsWidgetState extends State<TabsWidget> {
         profileImageUrl: profile.profileImageUrl,
         name: profile.name,
         email: profile.email,
+        userId: profile.id,
       ),
     ];
   }

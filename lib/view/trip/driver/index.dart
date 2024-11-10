@@ -54,6 +54,7 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
         profileImageUrl: profile?.profileImageUrl ?? '',
         name: profile?.name ?? 'Tên mặc định',
         email: profile?.email ?? 'Email mặc định',
+        userId: profile?.id ?? 0,
       ),
     ];
   }

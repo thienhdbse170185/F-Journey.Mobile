@@ -25,11 +25,12 @@ class TripMatchApiClient {
     }
   }
 
-  Future<GetTripMatchByUserIdResponse> getTripMatchByUserId(int userId) async {
+  Future<GetTripMatchByUserIdResponse> getTripMatchByDriverId(
+      int driverId) async {
     try {
       final response =
           await dio.get(ApiEndpoints.getTripMatch, queryParameters: {
-        "userId": userId,
+        "driverId": driverId,
       });
       if (response.statusCode == 200) {
         return GetTripMatchByUserIdResponse.fromJson(response.data);
