@@ -263,7 +263,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                   ),
                   const SizedBox(height: 32),
                   Text(
-                    "Đang chờ Xế xác nhận",
+                    "Danh sách yêu cầu chuyến đi",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Expanded(
@@ -276,7 +276,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             child: ListTile(
                               title: Text(
-                                "Trip: ${tripRequest.fromZoneName} - ${tripRequest.toZoneName}",
+                                "${tripRequest.fromZoneName} - ${tripRequest.toZoneName}",
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                               subtitle: Text(
@@ -285,7 +285,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget> {
                                   onPressed: () {
                                     _showConfirmDeleteDialog(tripRequest.id);
                                   },
-                                  child: const Text('Hủy chuyến')),
+                                  child: const Text('Hủy yêu cầu')),
                             ));
                       },
                     ),

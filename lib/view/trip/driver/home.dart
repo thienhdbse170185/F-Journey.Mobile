@@ -1,6 +1,5 @@
 import 'package:f_journey/core/utils/snackbar_util.dart';
 import 'package:f_journey/model/dto/trip_request_dto.dart';
-import 'package:f_journey/view/trip/widget/home_appbar.dart';
 import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:flutter/material.dart';

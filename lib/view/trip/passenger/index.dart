@@ -1,9 +1,6 @@
 import 'package:f_journey/core/utils/price_util.dart';
 import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
-import 'package:f_journey/view/message/message.dart';
-import 'package:f_journey/view/notification/notification.dart';
-import 'package:f_journey/view/payment/payment.dart';
 import 'package:f_journey/view/trip/passenger/home.dart';
 import 'package:f_journey/view/profile/profile.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
