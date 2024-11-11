@@ -1,4 +1,3 @@
-import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/utils/date_picker_util.dart';
 import 'package:f_journey/core/utils/snackbar_util.dart';
 import 'package:f_journey/model/request/trip_request/create_trip_request_request.dart';

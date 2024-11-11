@@ -22,7 +22,10 @@ class _TabsWidgetState extends State<TabsWidget> {
   String balance = "0";
   late GetUserProfileResult profile;
   List<TripRequestDto> tripRequests = [];
-  List<TripMatchDto> tripMatches = [];
+  List<TripMatchDto> tripMatches = [],
+      inProgressTripMatches = [],
+      completedTripMatches = [],
+      canceledTripMatches = [];
 
   late List<Widget> _widgetOptions;
 
@@ -52,6 +55,9 @@ class _TabsWidgetState extends State<TabsWidget> {
     if (tripMatchState is GetTripMatchByPassengerIdSuccess) {
       setState(() {
         tripMatches = tripMatchState.pendingTripMatches;
+        inProgressTripMatches = tripMatchState.inProgressTripMatches;
+        completedTripMatches = tripMatchState.completedTripMatches;
+        canceledTripMatches = tripMatchState.canceledTripMatches;
       });
     }
 
@@ -61,6 +67,9 @@ class _TabsWidgetState extends State<TabsWidget> {
         userId: profile.id,
         tripRequests: tripRequests,
         tripMatches: tripMatches,
+        inProgressTripMatches: inProgressTripMatches,
+        completedTripMatches: completedTripMatches,
+        canceledTripMatches: canceledTripMatches,
       ),
       ProfileWidget(
         profileImageUrl: profile.profileImageUrl,

@@ -71,7 +71,7 @@ class TripMatchCubit extends Cubit<TripMatchState> {
           await repository.getAllTripMatch();
       List<TripMatchDto> pendingTripMatches = tripMatches.data
           .where((element) =>
-              element.status == 'Pending' &&
+              element.status.toLowerCase() == 'pending' &&
               element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> acceptedTripMatches = tripMatches.data

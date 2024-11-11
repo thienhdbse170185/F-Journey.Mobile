@@ -6,7 +6,6 @@ import 'package:f_journey/viewmodel/reason/reason_cubit.dart';
 import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class TripMatchDetailWidget extends StatefulWidget {
   final TripMatchDto tripMatch;
@@ -96,7 +95,6 @@ class _TripMatchDetailWidgetState extends State<TripMatchDetailWidget> {
                     .map((e) => {'id': e.reasonId, 'content': e.content})
                     .toList();
               });
-              SnackbarUtil.openSuccessSnackbar(context, "Get reasons success");
             } else if (state is GetAllReasonFailure) {
               log("Failed to get reasons: //${state.message}");
             }
@@ -106,8 +104,7 @@ class _TripMatchDetailWidgetState extends State<TripMatchDetailWidget> {
           listener: (context, state) {
             if (state is UpdateTripMatchStatusSuccess) {
               SnackbarUtil.openSuccessSnackbar(
-                  context, "Hủy chuyến đi thành công");
-              context.pop();
+                  context, "Cập nhật trạng thái thành công");
             } else if (state is UpdateTripMatchStatusFailure) {
               SnackbarUtil.openFailureSnackbar(
                   context, "Update trip match status failed");
@@ -194,6 +191,18 @@ class _TripMatchDetailWidgetState extends State<TripMatchDetailWidget> {
                     child: const Text('Hủy chuyến đi'),
                   ),
                 )
+              else if (widget.tripMatch.status == 'Accepted')
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        context.read<TripMatchCubit>().updateTripMatchStatus(
+                            widget.tripMatch.id, 'InProgress', null, false);
+                        SnackbarUtil.openSuccessSnackbar(
+                            context, "Bắt đầu chuyến thành công!");
+                      },
+                      child: const Text('Bắt đầu khởi hành')),
+                )
               else if (widget.tripMatch.status == 'Completed')
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -209,8 +218,28 @@ class _TripMatchDetailWidgetState extends State<TripMatchDetailWidget> {
               else if (widget.tripMatch.status == 'InProgress')
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: const FilledButton(
-                      onPressed: null, child: Text('Chuyến này đang diễn ra')),
+                  child: Column(
+                    children: [
+                      const FilledButton(
+                        onPressed: null,
+                        child: Text('Chuyến đi đang diễn ra'),
+                      ),
+                      const SizedBox(height: 8),
+                      FilledButton(
+                        onPressed: () {
+                          // Handle completion of trip
+                          context.read<TripMatchCubit>().updateTripMatchStatus(
+                                widget.tripMatch.id,
+                                'Completed',
+                                null,
+                                false,
+                              );
+                          log("Trip marked as completed");
+                        },
+                        child: const Text('Đã hoàn thành chuyến'),
+                      ),
+                    ],
+                  ),
                 )
               else if (widget.tripMatch.status == 'Rejected')
                 SizedBox(
