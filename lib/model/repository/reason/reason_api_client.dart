@@ -14,7 +14,7 @@ class ReasonApiClient {
       } else {
         throw Exception("Failed to load reasons");
       }
-    } on DioException catch (e) {
+    } on DioException {
       rethrow;
     }
   }

@@ -1,6 +1,7 @@
 import 'package:f_journey/model/dto/trip_match_dto.dart';
 import 'package:f_journey/view/profile/trip_history.dart';
-import 'package:f_journey/view/trip/passenger/trip_match_detail.dart';
+import 'package:f_journey/view/profile/trip_history_driver.dart';
+import 'package:f_journey/view/trip/trip_match_detail.dart';
 import 'package:f_journey/view/wallet/payment_result.dart';
 import 'package:f_journey/view/wallet/wallet.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
@@ -44,6 +45,7 @@ class RouteName {
   static const String payment = '/payment';
   static const String tripMatchDetail = '/trip-match-detail';
   static const String tripHistory = '/trip-history';
+  static const String tripHistoryDriver = '/trip-history-driver';
 
   static const publicRoutes = [
     auth,
@@ -189,6 +191,14 @@ final router = GoRouter(
           builder: (context, state) {
             final userId = state.extra as int;
             return TripHistoryWidget(
+              userId: userId,
+            );
+          }),
+      GoRoute(
+          path: RouteName.tripHistoryDriver,
+          builder: (context, state) {
+            final userId = state.extra as int;
+            return TripHistoryDriverWidget(
               userId: userId,
             );
           })

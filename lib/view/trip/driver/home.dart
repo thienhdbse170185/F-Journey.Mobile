@@ -8,13 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeDriverWidget extends StatefulWidget {
   final int userId;
-  final String balance;
   final List<TripRequestDto> tripRequests;
   const HomeDriverWidget(
-      {super.key,
-      required this.userId,
-      required this.tripRequests,
-      required this.balance});
+      {super.key, required this.userId, required this.tripRequests});
 
   @override
   State<HomeDriverWidget> createState() => _HomeDriverWidgetState();
@@ -117,7 +113,8 @@ class _HomeDriverWidgetState extends State<HomeDriverWidget>
         appBar: const HomeAppBar(),
         body: RefreshIndicator(
           onRefresh: _refreshUserProfile,
-          child: Padding(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,82 +191,81 @@ class _HomeDriverWidgetState extends State<HomeDriverWidget>
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: updatedTripRequests.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final tripRequest = updatedTripRequests[index];
-                                return Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'From: ${tripRequest.fromZoneName}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
-                                              ),
-                                              Text(
-                                                'To: ${tripRequest.toZoneName}',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium,
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                'When: ${tripRequest.tripDate}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                'Slot: ${tripRequest.slot}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              )
-                                            ],
-                                          ),
+                          ListView.builder(
+                            itemCount: updatedTripRequests.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              final tripRequest = updatedTripRequests[index];
+                              return Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'From: ${tripRequest.fromZoneName}',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium,
+                                            ),
+                                            Text(
+                                              'To: ${tripRequest.toZoneName}',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'When: ${tripRequest.tripDate}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'Slot: ${tripRequest.slot}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                            )
+                                          ],
                                         ),
-                                        FilledButton(
-                                          onPressed: () {
-                                            _showConfirmDialog("Xác nhận",
-                                                "Bạn xác nhận muốn ghép cặp với bạn Ôm này?",
-                                                () {
-                                              Navigator.of(context).pop();
-                                              context
-                                                  .read<TripMatchCubit>()
-                                                  .createTripMatch(
-                                                      tripRequest.id);
-                                            });
-                                          },
-                                          child: const Text('Ghép cặp'),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      FilledButton(
+                                        onPressed: () {
+                                          _showConfirmDialog("Xác nhận",
+                                              "Bạn xác nhận muốn ghép cặp với bạn Ôm này?",
+                                              () {
+                                            Navigator.of(context).pop();
+                                            context
+                                                .read<TripMatchCubit>()
+                                                .createTripMatch(
+                                                    tripRequest.id);
+                                          });
+                                        },
+                                        child: const Text('Ghép cặp'),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
+                          const SizedBox(height: 8),
                         ],
                       ),
               ],

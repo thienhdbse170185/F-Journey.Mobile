@@ -1,7 +1,7 @@
 import 'package:f_journey/core/utils/price_util.dart';
 import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
-import 'package:f_journey/view/profile/profile.dart';
+import 'package:f_journey/view/profile/profile_driver.dart';
 import 'package:f_journey/view/trip/driver/home.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
@@ -48,9 +48,8 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
       HomeDriverWidget(
         userId: profile?.id ?? 0,
         tripRequests: tripRequests,
-        balance: balance,
       ),
-      ProfileWidget(
+      ProfileDriverWidget(
         profileImageUrl: profile?.profileImageUrl ?? '',
         name: profile?.name ?? 'Tên mặc định',
         email: profile?.email ?? 'Email mặc định',

@@ -194,6 +194,14 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
+            } else if (state is GetTripRequestSuccess) {
+              setState(() {
+                updatedTripRequests = state.tripRequests;
+              });
+            } else if (state is GetTripRequestFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
             }
           },
         ),
