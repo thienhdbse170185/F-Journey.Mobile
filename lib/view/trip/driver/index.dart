@@ -1,9 +1,11 @@
 import 'package:f_journey/core/utils/price_util.dart';
+import 'package:f_journey/model/dto/trip_match_dto.dart';
 import 'package:f_journey/model/dto/trip_request_dto.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
-import 'package:f_journey/view/profile/profile.dart';
+import 'package:f_journey/view/profile/profile_driver.dart';
 import 'package:f_journey/view/trip/driver/home.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
+import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,10 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
   String balance = "0";
   GetUserProfileResult? profile;
   List<TripRequestDto> tripRequests = [];
+  List<TripMatchDto> acceptedTripMatches = [],
+      inProgressTripmatches = [],
+      completedTripMatches = [],
+      canceledTripMatches = [];
 
   late List<Widget> _widgetOptions;
 
@@ -44,16 +50,32 @@ class _TabsDriverWidgetState extends State<TabsDriverWidget> {
       });
     }
 
+    context.read<TripMatchCubit>().getTripMatchByDriverId(profile!.id);
+    final tripMatchState = context.read<TripMatchCubit>().state;
+    if (tripMatchState is GetTripMatchByDriverIdSuccess) {
+      setState(() {
+        acceptedTripMatches = tripMatchState.acceptedTripMatches;
+        inProgressTripmatches = tripMatchState.inProgressTripMatches;
+        completedTripMatches = tripMatchState.completedTripMatches;
+        canceledTripMatches = tripMatchState.canceledTripMatches;
+      });
+    }
+
     _widgetOptions = <Widget>[
       HomeDriverWidget(
         userId: profile?.id ?? 0,
+        balance: profile?.wallet.balance.toString() ?? "0",
         tripRequests: tripRequests,
-        balance: balance,
+        acceptedTripMatches: acceptedTripMatches,
+        inProgressTripmatches: inProgressTripmatches,
+        completedTripMatches: completedTripMatches,
+        canceledTripMatches: canceledTripMatches,
       ),
-      ProfileWidget(
+      ProfileDriverWidget(
         profileImageUrl: profile?.profileImageUrl ?? '',
         name: profile?.name ?? 'Tên mặc định',
         email: profile?.email ?? 'Email mặc định',
+        userId: profile?.id ?? 0,
       ),
     ];
   }

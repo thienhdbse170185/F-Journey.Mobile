@@ -17,7 +17,8 @@ class TripMatchRepository {
   Future<GetTripMatchByUserIdResult> getTripMatchByDriverId(
       int driverId) async {
     try {
-      final response = await tripMatchApiClient.getTripMatchByUserId(driverId);
+      final response =
+          await tripMatchApiClient.getTripMatchByDriverId(driverId);
       return response.result;
     } catch (e) {
       rethrow;

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileWidget extends StatefulWidget {
+class ProfileDriverWidget extends StatefulWidget {
   final String profileImageUrl;
   final String name;
   final String email;
   final int userId;
-  const ProfileWidget(
+  const ProfileDriverWidget(
       {super.key,
       required this.profileImageUrl,
       required this.name,
@@ -17,10 +17,10 @@ class ProfileWidget extends StatefulWidget {
       required this.userId});
 
   @override
-  State<ProfileWidget> createState() => _ProfileWidgetState();
+  State<ProfileDriverWidget> createState() => _ProfileDriverWidgetState();
 }
 
-class _ProfileWidgetState extends State<ProfileWidget> {
+class _ProfileDriverWidgetState extends State<ProfileDriverWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -69,7 +69,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 title: const Text('Chuyến đi của bạn'),
                 onTap: () {
                   // Navigate to the trip details screen
-                  context.push(RouteName.tripHistory, extra: widget.userId);
+                  context.push(RouteName.tripHistoryDriver,
+                      extra: widget.userId);
                 },
               ),
               // Logout Action Menu

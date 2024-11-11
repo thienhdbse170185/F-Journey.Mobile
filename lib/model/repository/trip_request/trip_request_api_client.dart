@@ -29,7 +29,7 @@ class TripRequestApiClient {
       int userId) async {
     try {
       final response = await dio.get(ApiEndpoints.getTripRequest,
-          queryParameters: {'userId': userId});
+          queryParameters: {'userId': userId, 'pageSize': 100});
       if (response.statusCode == 200) {
         return GetTripRequestByUserIdResponse.fromJson(response.data);
       } else {
@@ -42,7 +42,8 @@ class TripRequestApiClient {
 
   Future<GetTripRequestByUserIdResponse> getAllTripRequest() async {
     try {
-      final response = await dio.get(ApiEndpoints.getTripRequest);
+      final response = await dio
+          .get(ApiEndpoints.getTripRequest, queryParameters: {'pageSize': 100});
       if (response.statusCode == 200) {
         return GetTripRequestByUserIdResponse.fromJson(response.data);
       } else {

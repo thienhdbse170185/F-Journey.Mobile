@@ -14,9 +14,20 @@ final class CreateTripMatchFailure extends TripMatchState {
 }
 
 final class GetTripMatchByDriverIdSuccess extends TripMatchState {
-  final List<TripMatchDto> tripMatches;
+  final List<TripMatchDto> pendingTripMatches;
+  final List<TripMatchDto> acceptedTripMatches;
+  final List<TripMatchDto> canceledTripMatches;
+  final List<TripMatchDto> completedTripMatches;
+  final List<TripMatchDto> inProgressTripMatches;
+  final List<TripMatchDto> rejectedTripMatches;
 
-  GetTripMatchByDriverIdSuccess(this.tripMatches);
+  GetTripMatchByDriverIdSuccess(
+      this.pendingTripMatches,
+      this.acceptedTripMatches,
+      this.canceledTripMatches,
+      this.completedTripMatches,
+      this.inProgressTripMatches,
+      this.rejectedTripMatches);
 }
 
 final class GetTripMatchByDriverIdFailure extends TripMatchState {
@@ -59,3 +70,5 @@ final class UpdateTripMatchStatusFailure extends TripMatchState {
 }
 
 final class GetTripMatchByPassengerIdInProgress extends TripMatchState {}
+
+final class GetTripMatchByDriverIdInProgress extends TripMatchState {}

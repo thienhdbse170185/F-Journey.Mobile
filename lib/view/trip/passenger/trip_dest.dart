@@ -61,7 +61,7 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
         startTime: startTimeController.text,
         slot: slots.entries.firstWhere((entry) => entry.value == slot).key,
         userId: userId!,
-        status: 'PENDING',
+        status: 'Pending',
       );
       context.read<TripRequestCubit>().createTripRequest(request);
     } else {
@@ -129,6 +129,9 @@ class _TripDestinationWidgetState extends State<TripDestinationWidget> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
+                          context
+                              .read<TripRequestCubit>()
+                              .getTripRequestByUserId(userId!);
                           context.pop();
                         },
                         child: const Text("Quay về trang chủ"),

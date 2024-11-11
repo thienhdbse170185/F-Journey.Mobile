@@ -30,7 +30,7 @@ class TripRequestCubit extends Cubit<TripRequestState> {
       List<TripRequestDto> tripRequests =
           await repository.getTripRequestByUserId(userId);
       tripRequests = tripRequests
-          .where((tripRequest) => tripRequest.status == 'PENDING')
+          .where((tripRequest) => tripRequest.status == 'Pending')
           .toList();
       if (tripRequests.isEmpty) {
         emit(TripRequestIsEmpty());
@@ -60,7 +60,7 @@ class TripRequestCubit extends Cubit<TripRequestState> {
     try {
       List<TripRequestDto> tripRequests = await repository.getAllTripRequest();
       tripRequests = tripRequests
-          .where((tripRequest) => tripRequest.status == 'PENDING')
+          .where((tripRequest) => tripRequest.status == 'Pending')
           .toList();
       if (tripRequests.isEmpty) {
         emit(TripRequestIsEmpty());

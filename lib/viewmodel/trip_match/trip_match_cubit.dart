@@ -24,10 +24,41 @@ class TripMatchCubit extends Cubit<TripMatchState> {
   }
 
   void getTripMatchByDriverId(int userId) async {
+    emit(GetTripMatchByDriverIdInProgress());
     try {
       GetTripMatchByUserIdResult tripMatches =
           await repository.getTripMatchByDriverId(userId);
-      emit(GetTripMatchByDriverIdSuccess(tripMatches.data));
+      List<TripMatchDto> pendingTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'Pending' && element.driverId == userId)
+          .toList();
+      List<TripMatchDto> acceptedTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'Accepted' && element.driverId == userId)
+          .toList();
+      List<TripMatchDto> canceledTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'Canceled' && element.driverId == userId)
+          .toList();
+      List<TripMatchDto> completedTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'Completed' && element.driverId == userId)
+          .toList();
+      List<TripMatchDto> inProgressTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'InProgress' && element.driverId == userId)
+          .toList();
+      List<TripMatchDto> rejectedTripMatches = tripMatches.data
+          .where((element) =>
+              element.status == 'Rejected' && element.driverId == userId)
+          .toList();
+      emit(GetTripMatchByDriverIdSuccess(
+          pendingTripMatches,
+          acceptedTripMatches,
+          canceledTripMatches,
+          completedTripMatches,
+          inProgressTripMatches,
+          rejectedTripMatches));
     } catch (e) {
       emit(GetTripMatchByDriverIdFailure(e.toString()));
     }
@@ -39,22 +70,34 @@ class TripMatchCubit extends Cubit<TripMatchState> {
       GetTripMatchByUserIdResult tripMatches =
           await repository.getAllTripMatch();
       List<TripMatchDto> pendingTripMatches = tripMatches.data
-          .where((element) => element.status == 'Pending')
+          .where((element) =>
+              element.status.toLowerCase() == 'pending' &&
+              element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> acceptedTripMatches = tripMatches.data
-          .where((element) => element.status == 'Accepted')
+          .where((element) =>
+              element.status == 'Accepted' &&
+              element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> canceledTripMatches = tripMatches.data
-          .where((element) => element.status == 'Canceled')
+          .where((element) =>
+              element.status == 'Canceled' &&
+              element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> completedTripMatches = tripMatches.data
-          .where((element) => element.status == 'Completed')
+          .where((element) =>
+              element.status == 'Completed' &&
+              element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> inProgressTripMatches = tripMatches.data
-          .where((element) => element.status == 'InProgress')
+          .where((element) =>
+              element.status == 'InProgress' &&
+              element.tripRequest.userId == passengerId)
           .toList();
       List<TripMatchDto> rejectedTripMatches = tripMatches.data
-          .where((element) => element.status == 'Rejected')
+          .where((element) =>
+              element.status == 'Rejected' &&
+              element.tripRequest.userId == passengerId)
           .toList();
 
       emit(GetTripMatchByPassengerIdSuccess(

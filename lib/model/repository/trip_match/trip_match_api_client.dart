@@ -25,11 +25,13 @@ class TripMatchApiClient {
     }
   }
 
-  Future<GetTripMatchByUserIdResponse> getTripMatchByUserId(int userId) async {
+  Future<GetTripMatchByUserIdResponse> getTripMatchByDriverId(
+      int driverId) async {
     try {
       final response =
           await dio.get(ApiEndpoints.getTripMatch, queryParameters: {
-        "userId": userId,
+        "driverId": driverId,
+        "pageSize": 100,
       });
       if (response.statusCode == 200) {
         return GetTripMatchByUserIdResponse.fromJson(response.data);
@@ -47,7 +49,10 @@ class TripMatchApiClient {
 
   Future<GetTripMatchByUserIdResponse> getAllTripMatch() async {
     try {
-      final response = await dio.get(ApiEndpoints.getTripMatch);
+      final response =
+          await dio.get(ApiEndpoints.getTripMatch, queryParameters: {
+        "pageSize": 100,
+      });
       if (response.statusCode == 200) {
         return GetTripMatchByUserIdResponse.fromJson(response.data);
       } else {

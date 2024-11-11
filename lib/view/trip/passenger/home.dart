@@ -16,13 +16,19 @@ class HomePassengerWidget extends StatefulWidget {
   final String balance;
   final int userId;
   final List<TripRequestDto> tripRequests;
-  final List<TripMatchDto> tripMatches;
+  final List<TripMatchDto> tripMatches,
+      inProgressTripMatches,
+      completedTripMatches,
+      canceledTripMatches;
   const HomePassengerWidget(
       {super.key,
       required this.balance,
       required this.userId,
       required this.tripRequests,
-      required this.tripMatches});
+      required this.tripMatches,
+      required this.inProgressTripMatches,
+      required this.completedTripMatches,
+      required this.canceledTripMatches});
 
   @override
   State<HomePassengerWidget> createState() => _HomePassengerWidgetState();
@@ -33,7 +39,10 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
   final TextEditingController _amountController = TextEditingController();
   String updatedBalance = '';
   List<TripRequestDto> updatedTripRequests = [];
-  List<TripMatchDto> updatedTripMatches = [];
+  List<TripMatchDto> updatedTripMatches = [],
+      updatedInProgressTripMatches = [],
+      updatedCompletedTripMatches = [],
+      updatedCanceledTripMatches = [];
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
@@ -44,6 +53,9 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
       updatedBalance = widget.balance;
       updatedTripRequests = widget.tripRequests;
       updatedTripMatches = widget.tripMatches;
+      updatedInProgressTripMatches = widget.inProgressTripMatches;
+      updatedCompletedTripMatches = widget.completedTripMatches;
+      updatedCanceledTripMatches = widget.canceledTripMatches;
     }); // Initialize with the provided balance
 
     _animationController =
@@ -194,6 +206,14 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
+            } else if (state is GetTripRequestSuccess) {
+              setState(() {
+                updatedTripRequests = state.tripRequests;
+              });
+            } else if (state is GetTripRequestFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
             }
           },
         ),
@@ -210,6 +230,16 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                 .getTripMatchByPassengerId(widget.userId);
           } else if (state is UpdateTripMatchStatusFailure) {
             LoadingDialog.hide(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          } else if (state is GetTripMatchByPassengerIdSuccess) {
+            setState(() {
+              updatedInProgressTripMatches = state.inProgressTripMatches;
+              updatedCompletedTripMatches = state.completedTripMatches;
+              updatedCanceledTripMatches = state.canceledTripMatches;
+            });
+          } else if (state is GetTripMatchByPassengerIdFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
@@ -320,6 +350,9 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                   ],
                 ),
                 const SizedBox(height: 32),
+                _buildTripMatchSection(context, "Chuyến đang diễn ra",
+                    updatedInProgressTripMatches),
+                const SizedBox(height: 16),
                 BlocBuilder<TripMatchCubit, TripMatchState>(
                     builder: (context, state) {
                   if (state is GetTripMatchByPassengerIdSuccess) {
@@ -553,6 +586,10 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                     return const SizedBox.shrink();
                   }
                 }),
+                _buildTripMatchSection(context, "Chuyến đã hoàn thành",
+                    updatedCompletedTripMatches),
+                _buildTripMatchSection(
+                    context, "Chuyến đã hủy", updatedCanceledTripMatches),
               ],
             ),
           ),
@@ -566,5 +603,123 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
         ),
       ),
     );
+  }
+
+  Widget _buildTripMatchSection(
+      BuildContext context, String title, List<TripMatchDto> tripMatches) {
+    return tripMatches.isEmpty
+        ? const SizedBox.shrink() // Không hiển thị nếu không có tripMatch nào
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primaryFixed),
+              ),
+              const SizedBox(height: 8),
+              _buildTripMatchList(context, tripMatches),
+            ],
+          );
+  }
+
+  Widget _buildTripMatchList(
+      BuildContext context, List<TripMatchDto> tripMatchList) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.255,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: tripMatchList.length,
+        itemBuilder: (BuildContext context, int index) {
+          final tripMatch = tripMatchList[index];
+          return GestureDetector(
+              onTap: () {
+                // Navigate to trip match details
+                context.push(RouteName.tripMatchDetail, extra: tripMatch);
+              },
+              child: Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'From: ${tripMatch.tripRequest.fromZoneName}',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            Text(
+                              'To: ${tripMatch.tripRequest.toZoneName}',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'When: ${tripMatch.tripRequest.tripDate} | Slot: ${tripMatch.tripRequest.slot}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _buildStatusButtons(tripMatch),
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+        },
+      ),
+    );
+  }
+
+  List<Widget> _buildStatusButtons(TripMatchDto tripMatch) {
+    switch (tripMatch.status) {
+      case 'Accepted':
+        return [
+          ElevatedButton(
+            onPressed: () {
+              context.read<TripMatchCubit>().updateTripMatchStatus(
+                  tripMatch.id, 'InProgress', null, false);
+              SnackbarUtil.openSuccessSnackbar(
+                  context, "Bắt đầu chuyến thành công!");
+              context.push(RouteName.tripMatchDetail, extra: tripMatch);
+            },
+            child: const Text('Bắt đầu khởi hành'),
+          ),
+        ];
+      case 'InProgress':
+        return [
+          ElevatedButton(
+            onPressed: null,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+            child: const Text('Đang khởi hành'),
+          ),
+        ];
+      case 'Completed':
+        return [
+          ElevatedButton(
+            onPressed: null,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Đã hoàn thành'),
+          ),
+        ];
+      case 'Canceled':
+        return [
+          ElevatedButton(
+            onPressed: null,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Chuyến đã bị hủy'),
+          ),
+        ];
+      default:
+        return [];
+    }
   }
 }
