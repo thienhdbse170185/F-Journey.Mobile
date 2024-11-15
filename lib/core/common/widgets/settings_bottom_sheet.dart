@@ -1,6 +1,8 @@
 import 'package:f_journey/core/common/cubits/theme_cubit.dart';
+import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 void showSettingsBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -23,6 +25,20 @@ void showSettingsBottomSheet(BuildContext context) {
                   onChanged: (bool value) {
                     // Directly toggle the theme from the Cubit
                     context.read<ThemeCubit>().toggleTheme();
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Sign Out',
+                    style: Theme.of(context).textTheme.titleMedium),
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LogoutStarted());
+                    context.pop();
                   },
                 ),
               ],

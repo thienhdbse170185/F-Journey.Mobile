@@ -3,6 +3,8 @@ import 'package:f_journey/core/network/http_client.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/core/theme/theme.dart';
 import 'package:f_journey/core/theme/util.dart';
+import 'package:f_journey/model/repository/payment/payment_api_client.dart';
+import 'package:f_journey/model/repository/payment/payment_repository.dart';
 import 'package:f_journey/model/repository/reason/reason_api_client.dart';
 import 'package:f_journey/model/repository/reason/reason_repository.dart';
 import 'package:f_journey/model/repository/trip_match/trip_match_api_client.dart';
@@ -18,6 +20,7 @@ import 'package:f_journey/model/repository/auth/auth_api_client.dart';
 import 'package:f_journey/model/repository/auth/auth_repository.dart';
 import 'package:f_journey/firebase_options.dart';
 import 'package:f_journey/viewmodel/reason/reason_cubit.dart';
+import 'package:f_journey/viewmodel/transaction/transaction_cubit.dart';
 import 'package:f_journey/viewmodel/trip_match/trip_match_cubit.dart';
 import 'package:f_journey/viewmodel/trip_request/trip_request_cubit.dart';
 import 'package:f_journey/viewmodel/wallet/wallet_cubit.dart';
@@ -66,7 +69,10 @@ class _MyAppState extends State<MyApp> {
                 tripMatchApiClient: TripMatchApiClient(dio: dio))),
         RepositoryProvider(
             create: (context) =>
-                ReasonRepository(reasonApiClient: ReasonApiClient(dio: dio)))
+                ReasonRepository(reasonApiClient: ReasonApiClient(dio: dio))),
+        RepositoryProvider(
+            create: (context) =>
+                PaymentRepository(paymentApiClient: PaymentApiClient(dio: dio)))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -91,7 +97,10 @@ class _MyAppState extends State<MyApp> {
                   repository: context.read<TripMatchRepository>())),
           BlocProvider(
               create: (context) =>
-                  ReasonCubit(context.read<ReasonRepository>()))
+                  ReasonCubit(context.read<ReasonRepository>())),
+          BlocProvider(
+              create: (context) =>
+                  TransactionCubit(context.read<PaymentRepository>()))
         ],
         child: const AppContent(),
       ),

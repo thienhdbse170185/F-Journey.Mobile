@@ -349,7 +349,7 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 _buildTripMatchSection(context, "Chuyến đang diễn ra",
                     updatedInProgressTripMatches),
                 const SizedBox(height: 16),
@@ -402,102 +402,133 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.255,
                             child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
                               itemCount: state.pendingTripMatches.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final tripMatch =
                                     state.pendingTripMatches[index];
                                 return GestureDetector(
-                                    onTap: () {
-                                      // Handle card tap event
-                                      context.push(RouteName.tripMatchDetail,
-                                          extra: tripMatch);
-                                    },
-                                    child: Card(
-                                      elevation: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(16),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    'From: ${tripMatch.tripRequest.fromZoneName}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium,
-                                                  ),
-                                                  Text(
-                                                    'To: ${tripMatch.tripRequest.toZoneName}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium,
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    'When: ${tripMatch.tripRequest.tripDate} | Slot: ${tripMatch.tripRequest.slot}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                  onTap: () {
+                                    // Handle card tap event
+                                    context.push(RouteName.tripMatchDetail,
+                                        extra: tripMatch);
+                                  },
+                                  child: Card(
+                                    elevation: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                OutlinedButton(
-                                                    onPressed: () {
-                                                      _showConfirmDialog(
-                                                          'Xác nhận hủy',
-                                                          'Bạn xác nhận từ chối ghép cặp với bạn Xế này?',
-                                                          () {
+                                                // Driver Avatar and Name
+                                                Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                        tripMatch.driver
+                                                            .profileImageUrl, // Assume avatar URL
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      tripMatch.driver
+                                                          .name, // Driver name
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 16),
+                                                Text(
+                                                  'From: ${tripMatch.tripRequest.fromZoneName}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                                ),
+                                                Text(
+                                                  'To: ${tripMatch.tripRequest.toZoneName}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  'When: ${tripMatch.tripRequest.tripDate} | Slot: ${tripMatch.tripRequest.slot}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: 100,
+                                                child: FilledButton(
+                                                  onPressed: () {
+                                                    context
+                                                        .read<TripMatchCubit>()
+                                                        .updateTripMatchStatus(
+                                                          tripMatch.id,
+                                                          'Accepted',
+                                                          null,
+                                                          true,
+                                                        );
+                                                  },
+                                                  child: const Text('Đồng ý'),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              SizedBox(
+                                                width: 100,
+                                                child: OutlinedButton(
+                                                  onPressed: () {
+                                                    _showConfirmDialog(
+                                                      'Xác nhận hủy',
+                                                      'Bạn xác nhận từ chối ghép cặp với bạn Xế này?',
+                                                      () {
                                                         Navigator.of(context)
                                                             .pop();
                                                         context
                                                             .read<
                                                                 TripMatchCubit>()
                                                             .updateTripMatchStatus(
-                                                                tripMatch.id,
-                                                                'Rejected',
-                                                                null,
-                                                                true);
-                                                      });
-                                                    },
-                                                    child:
-                                                        const Text('Từ chối')),
-                                                const SizedBox(width: 8),
-                                                FilledButton(
-                                                  onPressed: () {
-                                                    context
-                                                        .read<TripMatchCubit>()
-                                                        .updateTripMatchStatus(
-                                                            tripMatch.id,
-                                                            'Accepted',
-                                                            null,
-                                                            true);
+                                                              tripMatch.id,
+                                                              'Rejected',
+                                                              null,
+                                                              true,
+                                                            );
+                                                      },
+                                                    );
                                                   },
-                                                  child: const Text('Ghép cặp'),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                                  child: const Text('Từ chối'),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ));
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),
-                          const SizedBox(height: 48),
+                          const SizedBox(height: 32),
                         ],
                       );
                     } else {
@@ -580,14 +611,17 @@ class _HomePassengerWidgetState extends State<HomePassengerWidget>
                                           .outline),
                               textAlign: TextAlign.center,
                             ),
+                            const SizedBox(height: 32)
                           ]),
                     );
                   } else {
                     return const SizedBox.shrink();
                   }
                 }),
+                const SizedBox(height: 16),
                 _buildTripMatchSection(context, "Chuyến đã hoàn thành",
                     updatedCompletedTripMatches),
+                const SizedBox(height: 16),
                 _buildTripMatchSection(
                     context, "Chuyến đã hủy", updatedCanceledTripMatches),
               ],

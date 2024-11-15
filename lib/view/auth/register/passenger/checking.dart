@@ -1,7 +1,9 @@
 import 'package:f_journey/core/common/widgets/settings_bottom_sheet.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/model/response/auth/get_user_profile_response.dart';
+import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class CheckingWidget extends StatefulWidget {
@@ -69,73 +71,78 @@ class _CheckingWidgetState extends State<CheckingWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
-          ),
-          title: const Text('Checking'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () {
-                showSettingsBottomSheet(context);
-              },
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          context.go(RouteName.getStarted);
+        }
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.notifications_outlined),
+              onPressed: () {},
             ),
-          ],
-        ),
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          padding:
-              const EdgeInsets.only(top: 64, bottom: 16, left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Image với hiệu ứng fade-in
-              FadeTransition(
-                opacity: _imageOpacity,
-                child: Image.asset(
-                  'assets/images/checking_image.png',
-                  width: 260,
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Text Hi với hiệu ứng fade-in
-              FadeTransition(
-                opacity: _textOpacity,
-                child: Text('Hi!',
-                    style: Theme.of(context).textTheme.headlineSmall),
-              ),
-              const SizedBox(height: 8),
-              // Mô tả với hiệu ứng fade-in
-              FadeTransition(
-                opacity: _descriptionOpacity,
-                child: Text(
-                  'Có vẻ như bạn muốn tìm kiếm sự tiện lợi và thú vị cho mỗi chuyến hành trình của bản thân.\n>> Hãy điền thông tin để bắt đầu nhé!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Theme.of(context).colorScheme.outline),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Nút Okay với hiệu ứng fade-in
-              FadeTransition(
-                opacity: _buttonOpacity,
-                child: FilledButton(
-                  onPressed: () {
-                    context.push(RouteName.passengerRegister, extra: {
-                      'profile': widget.userProfile,
-                    });
-                  },
-                  child: const Text('Okay ^~^'),
-                ),
+            title: const Text('Checking'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {
+                  showSettingsBottomSheet(context);
+                },
               ),
             ],
           ),
-        ));
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            padding:
+                const EdgeInsets.only(top: 64, bottom: 16, left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Image với hiệu ứng fade-in
+                FadeTransition(
+                  opacity: _imageOpacity,
+                  child: Image.asset(
+                    'assets/images/checking_image.png',
+                    width: 260,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                // Text Hi với hiệu ứng fade-in
+                FadeTransition(
+                  opacity: _textOpacity,
+                  child: Text('Hi!',
+                      style: Theme.of(context).textTheme.headlineSmall),
+                ),
+                const SizedBox(height: 8),
+                // Mô tả với hiệu ứng fade-in
+                FadeTransition(
+                  opacity: _descriptionOpacity,
+                  child: Text(
+                    'Có vẻ như bạn muốn tìm kiếm sự tiện lợi và thú vị cho mỗi chuyến hành trình của bản thân.\n>> Hãy điền thông tin để bắt đầu nhé!',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.outline),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                // Nút Okay với hiệu ứng fade-in
+                FadeTransition(
+                  opacity: _buttonOpacity,
+                  child: FilledButton(
+                    onPressed: () {
+                      context.push(RouteName.passengerRegister, extra: {
+                        'profile': widget.userProfile,
+                      });
+                    },
+                    child: const Text('Okay ^~^'),
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }
