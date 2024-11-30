@@ -1,3 +1,4 @@
+import 'package:f_journey/core/common/cubits/theme_cubit.dart';
 import 'package:f_journey/core/router.dart';
 import 'package:f_journey/viewmodel/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,16 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Hồ sơ'),
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Switch(
+                  value: context.watch<ThemeCubit>().state,
+                  onChanged: (value) {
+                    context.read<ThemeCubit>().toggleTheme();
+                  },
+                ))
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -72,6 +83,15 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   context.push(RouteName.tripHistory, extra: widget.userId);
                 },
               ),
+
+              ListTile(
+                leading: const Icon(Icons.payment),
+                title: const Text('Lịch sử thanh toán'),
+                onTap: () {
+                  context.push(RouteName.paymentHistory);
+                },
+              ),
+
               // Logout Action Menu
               ListTile(
                 leading: const Icon(Icons.logout),

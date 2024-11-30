@@ -42,4 +42,7 @@ class ApiEndpoints {
 
   // Reason Endpoints
   static const String getReasons = "/cancellationreasons";
+
+  //Payment Endpoints
+  static const String getTransactionHistory = "/transactions/history";
 }
